@@ -1,0 +1,23 @@
+{
+  "name": "bixie/invoicemaker",
+  "module": "bixie/invoicemaker",
+  "type": "pagekit-extension",
+  "version": "0.0.5",
+  "title": "Bixie Invoicemaker",
+  "description": "Create invoices in PDF.",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Bixie",
+      "email": "info@bixie.org",
+      "homepage": "http://www.bixie.org"
+    }
+  ],
+  "extra": {
+    "icon": "icon.svg",
+    "scripts": "scripts.php"
+  },
+  "require": {
+    "bixie/framework": "~0.1"
+  }
+}

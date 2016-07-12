@@ -1,0 +1,61 @@
+
+@page { margin: 0; }
+* {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+body {
+    padding: 4cm 2cm 5cm 2cm;
+}
+#background { position: fixed; bottom: 0; right: 0; top: 0; left: 0; z-index: -1; }
+
+p, td, th, div, dl, dd, strong, div, li, a {
+    font-size: 12px;
+    line-height: 14px;
+}
+
+h1 {font-size: 30px;color: #999999;}
+h2 {font-size: 24px;color: #999999;}
+h3 {font-size: 16px;color: #808080;}
+h4 {font-size: 14px;font-weight: normal;color: #808080;}
+h5 {font-size: 14px;}
+h6 {font-size: 12px;}
+
+hr {margin: 20px 0;}
+
+table {
+    width: 100%;
+}
+
+thead {
+    border-bottom: 1px solid #999999;
+}
+th {
+    color: #808080;
+}
+td {
+    padding: 5px;
+}
+tr.spec td:first-child {
+    font-style: italic;
+}
+tr.sub td:first-child, tr.total td:first-child {
+    font-weight: bold;
+}
+tr.sub td:last-child {
+    border-top: 1px solid #464646;
+    font-weight: bold;
+}
+tr.total td:last-child {
+    border-top: 2px solid #464646;
+    font-weight: bold;
+}
+
+#creditor {
+    padding-left: 50%;
+}
+
+#subline {
+    padding: 50px 0 0 0;
+    text-align: center;
+}
