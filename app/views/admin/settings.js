@@ -31,7 +31,8 @@ module.exports = {
                 view: '',
                 title: '',
                 creditor_address: '',
-                subline: ''
+                subline: '',
+                params: {}
             });
         }
 

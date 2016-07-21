@@ -9,7 +9,7 @@ module.exports = {
                 invoice_lines: [],
                 data: {}
             },
-            tremplates: [],
+            templates: [],
             form: {}
         }, window.$data);
     },

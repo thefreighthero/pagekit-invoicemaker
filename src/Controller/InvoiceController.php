@@ -2,7 +2,6 @@
 
 namespace Bixie\Invoicemaker\Controller;
 
-use Bixie\Invoicemaker\InvoicemakerModule;
 use Pagekit\Application as App;
 use Bixie\Invoicemaker\Model\Invoice;
 
@@ -18,9 +17,6 @@ class InvoiceController {
 	 */
 	public function editAction ($id = 0) {
 
-		/** @var InvoicemakerModule $invoicemaker */
-		$invoicemaker = App::module('bixie/invoicemaker');
-
 		if (!$invoice = Invoice::find($id)) {
 
 			if ($id == 0) {
@@ -30,7 +26,7 @@ class InvoiceController {
 		}
 
 		if (!$invoice) {
-			App::abort(404, __('Invoice not found.'));
+			App::abort(404, __('Invoice not found'));
 		}
 
 		return [
@@ -39,8 +35,7 @@ class InvoiceController {
 				'name' => 'bixie/invoicemaker/admin/invoice.php'
 			],
 			'$data' => [
-				'pdf_templates' => $invoicemaker->getPdfTemplates(),
-				'templates' => $invoicemaker->getInvoiceGroups(),
+				'templates' => App::module('bixie/invoicemaker')->getTemplates(),
 				'invoice' => $invoice
 			],
 			'invoice' => $invoice

@@ -68,6 +68,7 @@ class Invoice implements \JsonSerializable {
 		'pdf_filename' => 'getPdfFilename',
 		'pdf_url' => 'getPdfUrl'
 	];
+
 	/**
 	 * @return Debtor
 	 */

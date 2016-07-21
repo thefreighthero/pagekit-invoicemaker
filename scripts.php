@@ -20,7 +20,7 @@ return [
 				$table->addColumn('invoice_lines', 'json_array', ['notnull' => false]);
 				$table->addColumn('data', 'json_array', ['notnull' => false]);
 				$table->setPrimaryKey(['id']);
-				$table->addIndex('ext_key', 'INVOICEMAKER_INVOICE_EXT_KEY');
+				$table->addIndex(['ext_key'], 'INVOICEMAKER_INVOICE_EXT_KEY');
 				$table->addUniqueIndex(['invoice_number'], '@INVOICEMAKER_INVOICE_INVOICE_NUMBER');
 			});
 		}
