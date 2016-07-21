@@ -54,7 +54,7 @@ return [
 				'title' => 'INVOICE',
 				'creditor_address' => '',
 				'subline' => '',
-				'params' => []
+				'params' => ['pdf_background' => '']
 			]
 		]
 	],
@@ -102,6 +102,9 @@ return [
 	'settings' => '@invoicemaker/settings',
 
 	'events' => [
+		'console.init' => function ($event, $console) {
+			$console->add(new \Bixie\Invoicemaker\Console\Commands\TranslateCommand());
+		}
 	]
 
 ];

@@ -32,26 +32,6 @@ class InvoicemakerModule extends Module {
 	 */
 	public function main (App $app) {
 
-		$util = $app['db']->getUtility();
-		if ($util->tableExists('@invoicemaker_invoice') === false) {
-			$util->createTable('@invoicemaker_invoice', function ($table) {
-				$table->addColumn('id', 'integer', ['unsigned' => true, 'length' => 10, 'autoincrement' => true]);
-				$table->addColumn('template', 'string', ['length' => 255]);
-				$table->addColumn('created', 'datetime');
-				$table->addColumn('invoice_number', 'string', ['length' => 255]);
-				$table->addColumn('invoice_group', 'string', ['length' => 255]);
-				$table->addColumn('amount', 'decimal', ['precision' => 9, 'scale' => 2]);
-				$table->addColumn('ext_key', 'string', ['length' => 255, 'notnull' => false]);
-				$table->addColumn('pdf_file', 'string', ['length' => 255, 'notnull' => false]);
-				$table->addColumn('debtor', 'json_array', ['notnull' => false]);
-				$table->addColumn('invoice_lines', 'json_array', ['notnull' => false]);
-				$table->addColumn('data', 'json_array', ['notnull' => false]);
-				$table->setPrimaryKey(['id']);
-				$table->addIndex(['ext_key'], 'INVOICEMAKER_INVOICE_EXT_KEY');
-				$table->addUniqueIndex(['invoice_number'], '@INVOICEMAKER_INVOICE_INVOICE_NUMBER');
-			});
-		}
-
 		$app['invoicemaker.factory'] = function ($app) {
 			return new InvoiceFactory($app);
 		};
@@ -156,7 +136,8 @@ class InvoicemakerModule extends Module {
 			'ext_key' => Arr::get($data, 'ext_key', ''),
 			'template' => $template->name,
 			'invoice_number' => $this->getInvoiceNumber($invoiceGroup, $data),
-			'invoice_group' => $invoiceGroup->name
+			'invoice_group' => $invoiceGroup->name,
+			'data' => array_diff_key($data, array_flip(['amount', 'ext_key']))
 		]);
 
 		try {
@@ -185,6 +166,28 @@ class InvoicemakerModule extends Module {
 		}
 
 		return $invoice;
+	}
+
+	/**
+	 * @param $ext_key
+	 * @return array|Invoice|bool
+	 */
+	public function getByExternKey ($ext_key) {
+		if ($invoices = Invoice::byExternKey($ext_key)) {
+			return array_values($invoices);
+		}
+		return [];
+	}
+
+	/**
+	 * @param $ext_key
+	 * @return float
+	 */
+	public function getSumByExternKey ($ext_key) {
+		if ($sum = Invoice::sumByExternKey($ext_key)) {
+			return $sum;
+		}
+		return 0;
 	}
 
 	/**

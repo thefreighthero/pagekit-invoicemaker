@@ -1,0 +1,197 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pagekit 1.0.5 (bixie/invoicemaker, messages)\n"
+"POT-Creation-Date: 2016-07-19 13:24+0000\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Invoice %invoice_number% saved."
+msgstr ""
+
+msgid "All roles"
+msgstr ""
+
+msgid "Filter by"
+msgstr ""
+
+msgid "Invoice not found"
+msgstr ""
+
+msgid "Error in creating PDF file"
+msgstr ""
+
+msgid "Key not valid."
+msgstr ""
+
+msgid "Invoice"
+msgstr ""
+
+msgid "Invoices"
+msgstr ""
+
+msgid "Invoicemaker settings"
+msgstr ""
+
+msgid "To:"
+msgstr ""
+
+msgid "ID"
+msgstr ""
+
+msgid "VAT"
+msgstr ""
+
+msgid "COC"
+msgstr ""
+
+msgid "Invoice date"
+msgstr ""
+
+msgid "Invoice number"
+msgstr ""
+
+msgid "Description"
+msgstr ""
+
+msgid "Vat"
+msgstr ""
+
+msgid "Units"
+msgstr ""
+
+msgid "Per unit"
+msgstr ""
+
+msgid "Base"
+msgstr ""
+
+msgid "Amount"
+msgstr ""
+
+msgid "Edit invoice"
+msgstr ""
+
+msgid "External key"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Download PDF"
+msgstr ""
+
+msgid "PDF file"
+msgstr ""
+
+msgid "Rerender PDF file"
+msgstr ""
+
+msgid "Invoice template"
+msgstr ""
+
+msgid "Debtor"
+msgstr ""
+
+msgid "Company"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Address 1"
+msgstr ""
+
+msgid "Address 2"
+msgstr ""
+
+msgid "Zip code"
+msgstr ""
+
+msgid "City"
+msgstr ""
+
+msgid "Country"
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "Please enter a valid email address"
+msgstr ""
+
+msgid "Debtor ID"
+msgstr ""
+
+msgid "VAT number"
+msgstr ""
+
+msgid "COC number"
+msgstr ""
+
+msgid "Add invoice"
+msgstr ""
+
+msgid "Invoice #"
+msgstr ""
+
+msgid "Debtor name"
+msgstr ""
+
+msgid "Created"
+msgstr ""
+
+msgid "Download"
+msgstr ""
+
+msgid "No invoices found."
+msgstr ""
+
+msgid "Invoicemaker Settings"
+msgstr ""
+
+msgid "PDF files"
+msgstr ""
+
+msgid "Store PDFs on server"
+msgstr ""
+
+msgid "PDF path"
+msgstr ""
+
+msgid "Invoice groups"
+msgstr ""
+
+msgid "Format invoice number"
+msgstr ""
+
+msgid "Number of digits"
+msgstr ""
+
+msgid "Add group"
+msgstr ""
+
+msgid "Templates"
+msgstr ""
+
+msgid "PDF template"
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Creditor address"
+msgstr ""
+
+msgid "Subline"
+msgstr ""
+
+msgid "PDF background image"
+msgstr ""
+
+msgid "Add template"
+msgstr ""
+
