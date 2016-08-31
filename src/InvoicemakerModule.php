@@ -35,6 +35,8 @@ class InvoicemakerModule extends Module {
 		$app['invoicemaker.factory'] = function ($app) {
 			return new InvoiceFactory($app);
 		};
+
+		$app['locator']->add('invoicemakerInvoices:', $this->getPdfPath());
 		
 		$this->registerPdfTemplate('default', 'bixie/invoicemaker:templates/default');
 	}
