@@ -67,7 +67,7 @@
 					{{ invoice.amount }}
 				</td>
 				<td>
-					<a :href="invoice.pdf_url" download><i class="uk-icon-external-link uk-margin-small-right"></i>
+					<a :href="invoice.pdf_url" download><i class="uk-icon-download uk-margin-small-right"></i>
 						{{ invoice.pdf_filename }}</a>
 				</td>
 			</tr>
