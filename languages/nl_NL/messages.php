@@ -8,7 +8,7 @@
   'Invoices' => 'Facturen',
   'Invoicemaker settings' => 'Invoicemaker instellingen',
   'To:' => 'Aan:',
-  'ID' => 'Klantnummer',
+  'ID' => 'ID',
   'VAT' => 'BTW nummer',
   'COC' => 'KvK nummer',
   'Invoice date' => 'Factuurdatum',

@@ -14,7 +14,8 @@ $iframe_src = $app->url('@invoicemaker/api/invoice/html', [
 			<div data-uk-margin>
 
 				<h2 class="uk-margin-remove">{{ 'Edit invoice' | trans }} <em>{{ invoice.invoice_number }}</em></h2>
-				<em>{{ 'External key' | trans }}: {{ invoice.ext_key }}</em>
+				<em>{{ 'External key' | trans }}:</em> <span>{{ invoice.ext_key }}</span><br/>
+				<em>{{ 'Status' | trans }}:</em> <span>{{ getStatusText(invoice.status) }}</span>
 
 			</div>
 			<div data-uk-margin>

@@ -19,6 +19,7 @@ class Template implements \JsonSerializable {
 	public $name = '';
 	public $pdf_template = '';
 	public $title = '';
+	public $credit_title = '';
 	public $creditor_address = '';
 	public $subline = '';
 	public $params = [];
@@ -71,7 +72,11 @@ class Template implements \JsonSerializable {
 		if (!$template_path = $this->invoicemaker->getPdfTemplate($this->pdf_template) or !App::locator()->get($template_path . '/invoice.php')) {
 			throw new InvoicemakerException(sprintf('PDF template %s not found', $this->pdf_template));
 		}
-		return App::view($template_path . '/invoice.php', ['invoice' => $invoice, 'template' => $this]);
+		return App::view($template_path . '/invoice.php', [
+		    'invoice' => $invoice,
+            'template' => $this,
+            'isCredit' => $invoice->status == Invoice::STATUS_CREDIT
+        ]);
 
 	}
 

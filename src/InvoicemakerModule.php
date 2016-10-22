@@ -112,7 +112,7 @@ class InvoicemakerModule extends Module {
 		return isset($this->pdf_templates[$name]) ? $this->pdf_templates[$name] : false;
 	}
 
-	/**
+    /**
 	 * @param Debtor                $debtor
 	 * @param InvoiceLineCollection $invoice_lines
 	 * @param string                $template_name
@@ -144,7 +144,7 @@ class InvoicemakerModule extends Module {
 
 		try {
 
-			$invoice->save();
+			$invoice->save(['status' => ($invoice->amount < 0 ? Invoice::STATUS_CREDIT : Invoice::STATUS_INITIAL)]);
 
 		} catch (\Exception $e) {
 			if ($e instanceof UniqueConstraintViolationException) {
@@ -156,7 +156,7 @@ class InvoicemakerModule extends Module {
 		try {
 
 			if ($this->renderPdfFile($invoice)) {
-				
+
 				$invoice->save([
 					'pdf_file' => $invoice->getPdfFilename()
 				]);
@@ -170,7 +170,45 @@ class InvoicemakerModule extends Module {
 		return $invoice;
 	}
 
-	/**
+    /**
+     * @param $invoice_number
+     * @return Invoice
+     */
+    public function creditInvoice ($invoice_number) {
+
+        if (!$invoice = Invoice::byInvoiceNumber($invoice_number)) {
+            throw new InvoicemakerException(__('Invoice %invoice_number% not found!', ['%invoice_number%' => $invoice_number]));
+        }
+        if ($invoice->status == Invoice::STATUS_CREDITED) {
+            throw new InvoicemakerException(__('Invoice %invoice_number% already has been credited by invoice %credit_invoice_number%!', [
+                '%invoice_number%' => $invoice_number,
+                '%credit_invoice_number%' => $invoice->get('credited_by')
+            ]));
+        }
+        if ($invoice->amount < -1) {
+            throw new InvoicemakerException(__('Invoice %invoice_number% already is a credit invoice!', ['%invoice_number%' => $invoice_number]));
+        }
+
+        $invoice_lines = $invoice->getInvoiceLines();
+
+        $credit_invoice =  $this->createInvoice(
+            $invoice->getDebtor(),
+            $invoice_lines,
+            $invoice->template,
+            $invoice->invoice_group,
+            array_merge([
+                'ext_key' => $invoice->ext_key,
+                'amount' => $invoice->amount * -1,
+            ], $invoice->data)
+        );
+
+        $invoice->set('credited_by', $credit_invoice->invoice_number);
+        $invoice->save(['status' => Invoice::STATUS_CREDITED]);
+
+        return $credit_invoice;
+    }
+
+    /**
 	 * @param $ext_key
 	 * @return array|Invoice|bool
 	 */
@@ -187,7 +225,7 @@ class InvoicemakerModule extends Module {
 	 */
 	public function getSumByExternKey ($ext_key) {
 		if ($sum = Invoice::sumByExternKey($ext_key)) {
-			return $sum;
+			return (float) $sum;
 		}
 		return 0;
 	}

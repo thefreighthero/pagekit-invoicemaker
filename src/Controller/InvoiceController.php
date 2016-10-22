@@ -35,6 +35,7 @@ class InvoiceController {
 				'name' => 'bixie/invoicemaker/admin/invoice.php'
 			],
 			'$data' => [
+				'statuses' => Invoice::getStatuses(),
 				'templates' => App::module('bixie/invoicemaker')->getTemplates(),
 				'invoice' => $invoice
 			],

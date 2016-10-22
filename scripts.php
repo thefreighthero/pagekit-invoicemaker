@@ -9,6 +9,7 @@ return [
 		if ($util->tableExists('@invoicemaker_invoice') === false) {
 			$util->createTable('@invoicemaker_invoice', function ($table) {
 				$table->addColumn('id', 'integer', ['unsigned' => true, 'length' => 10, 'autoincrement' => true]);
+				$table->addColumn('status', 'string', ['length' => 16]);
 				$table->addColumn('template', 'string', ['length' => 255]);
 				$table->addColumn('created', 'datetime');
 				$table->addColumn('invoice_number', 'string', ['length' => 255]);

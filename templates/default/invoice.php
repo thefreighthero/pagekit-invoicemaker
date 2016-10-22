@@ -2,6 +2,7 @@
 /**
  * @var Bixie\Invoicemaker\Settings\Template  $template
  * @var Bixie\Invoicemaker\Model\Invoice      $invoice
+ * @var bool								  $isCredit
  */
 use Pagekit\Application as App;
 use Bixie\Framework\Helpers\DateHelper;
@@ -18,7 +19,7 @@ use Bixie\Framework\Helpers\DateHelper;
 
 <div id="creditor"><?= $template->markdown('creditor_address') ?></div>
 
-<h1><?= $template->title ?></h1>
+<h1><?= $isCredit ? $template->credit_title : $template->title ?></h1>
 
 <strong><?= __('To:') ?></strong><br/>
 <?php if ($invoice->getDebtor()->company) : ?><div><?= $invoice->getDebtor()->company ?></div><?php endif; ?>
@@ -58,12 +59,14 @@ use Bixie\Framework\Helpers\DateHelper;
 <?php foreach ($invoice->getInvoiceLines()->all() as $invoiceLine) : ?>
 
 	<tr class="<?= $invoiceLine->type ?>">
-		<td><?= $invoiceLine->description ?></td>
-		<td align="right"><?php if ($invoiceLine->vat_perc != '') : ?><?= $invoiceLine->vat_perc ?>%<?php endif; ?></td>
-		<td align="right"><?= $invoiceLine->units ?></td>
-		<td align="right"><?= $invoiceLine->per_unit ?></td>
+		<td <?= ($invoiceLine->type == 'title' ? 'colspan="4"' : '') ?>><?= $invoiceLine->description ?></td>
+		<?php if ($invoiceLine->type != 'title') : ?>
+			<td align="right"><?php if ($invoiceLine->vat_perc !== null) : ?><?= $invoiceLine->vat_perc ?>%<?php endif; ?></td>
+			<td align="right"><?= $invoiceLine->units ?></td>
+			<td align="right"><?= ($isCredit && $invoiceLine->per_unit?'-/- ':'')?><?= $invoiceLine->per_unit ?></td>
+		<?php endif; ?>
 		<td align="right"><?= $invoiceLine->base ?></td>
-		<td align="right"><?= $invoiceLine->amount ?></td>
+		<td align="right"><?= ($isCredit && $invoiceLine->amount?'-/- ':'')?><?= $invoiceLine->amount ?></td>
 	</tr>
 
 <?php endforeach; ?>

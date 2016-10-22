@@ -95,6 +95,12 @@
 						</div>
 					</div>
 					<div class="uk-form-row">
+						<label class="uk-form-label">{{ 'Credit title' | trans }}</label>
+						<div class="uk-form-controls">
+							<input type="text" class="uk-form-width-large" v-model="template.credit_title"/>
+						</div>
+					</div>
+					<div class="uk-form-row">
 						<label class="uk-form-label">{{ 'Creditor address' | trans }}</label>
 						<div class="uk-form-controls">
 							<textarea class="uk-form-width-large" v-model="template.creditor_address" rows="5" cols="40"></textarea>

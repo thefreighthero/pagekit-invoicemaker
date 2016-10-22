@@ -52,6 +52,7 @@ return [
 				'name' => 'default',
 				'view' => 'default',
 				'title' => 'INVOICE',
+				'credit_title' => 'CREDIT INVOICE',
 				'creditor_address' => '',
 				'subline' => '',
 				'params' => ['pdf_background' => '']

@@ -26,7 +26,7 @@ class InvoicemakerController {
 			],
 			'$data' => [
 				'templates' => $invoicemaker->getInvoiceGroups(),
-				'groups' => $invoicemaker->getTemplates(),
+                'groups' => $invoicemaker->getTemplates(),
 				'config' => [
 					'filter' => (object) $filter,
 					'page' => $page

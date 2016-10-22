@@ -2,19 +2,20 @@ module.exports = {
 
     el: '#invoice-edit',
 
-    data: function () {
+    data() {
         return _.merge({
             invoice: {
                 debtor: {},
                 invoice_lines: [],
                 data: {}
             },
+            statuses: [],
             templates: [],
             form: {}
         }, window.$data);
     },
 
-    ready: function () {
+    ready() {
         this.Invoices = this.$resource('api/invoicemaker/invoice{/id}', {}, {'rerender': {
             method: 'get',
             url: 'api/invoicemaker/invoice/rerender{/id}'
@@ -22,15 +23,15 @@ module.exports = {
     },
 
     computed: {
-        keys: function () {
+        keys() {
             return (this.types[this.invoice.type] ? this.types[this.invoice.type].keys : []);
         }
     },
 
     methods: {
 
-        save: function () {
-            this.Invoices.save({id: this.invoice.id}, {invoice: this.invoice}).then(function (res) {
+        save() {
+            this.Invoices.save({id: this.invoice.id}, {invoice: this.invoice}).then(res => {
                 var data = res.data;
                 if (!this.invoice.id) {
                     window.history.replaceState({}, '', this.$url.route('admin/invoicemaker/invoice/edit', {id: data.invoice.id}));
@@ -42,17 +43,21 @@ module.exports = {
 
                 this.$els.iframe.contentWindow.location.reload();
 
-            }, function (res) {
+            }, res => {
                 this.$notify(res.data || res, 'danger');
             });
         },
 
-        rerender: function () {
-            this.Invoices.rerender({id: this.invoice.id}).then(function () {
+        rerender() {
+            this.Invoices.rerender({id: this.invoice.id}).then(() => {
                 this.$notify('PDF rerendered.', 'success');
-            }, function (res) {
+            }, res => {
                 this.$notify(res.data || res, 'danger');
             });
+        },
+
+        getStatusText(status) {
+            return this.statuses[status] || status;
         }
 
     }

@@ -40,6 +40,7 @@
 				</th>
 				<th class="pk-table-min-width-100" v-order:invoice_number="config.filter.order">{{ 'Invoice #' | trans }}</th>
 				<th class="pk-table-min-width-200">{{ 'Debtor name' | trans }}</th>
+				<th class="" v-order:ext_key="config.filter.order">{{ 'External key' | trans }}</th>
 				<th class="" v-order:created="config.filter.order">{{ 'Created' | trans }}</th>
 				<th class="" v-order:amount="config.filter.order">{{ 'Amount' | trans }}</th>
 				<th class="pk-table-min-width-200">{{ 'Download' | trans }}</th>
@@ -59,6 +60,9 @@
 				</td>
 				<td>
 					{{ invoice.debtor.name }}
+				</td>
+				<td>
+					<em>{{ invoice.ext_key }}</em>
 				</td>
 				<td>
 					{{ invoice.created | date 'shortDate' }}

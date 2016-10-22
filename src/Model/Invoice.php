@@ -15,8 +15,22 @@ class Invoice implements \JsonSerializable {
 
 	use DataModelTrait, InvoiceModelTrait;
 
+    /* Invoice inital and valid. */
+    const STATUS_INITIAL = 'INITAL';
+
+    /* Invoice credit. */
+    const STATUS_CREDIT = 'CREDIT';
+
+    /* Invoice credited. */
+    const STATUS_CREDITED = 'CREDITED';
+
 	/** @Column(type="integer") @Id */
 	public $id;
+	/**
+	 * @Column(type="string")
+	 * @var string
+	 */
+	public $status = 'INITAL';
 	/**
 	 * @Column(type="string")
 	 * @var string
@@ -68,6 +82,17 @@ class Invoice implements \JsonSerializable {
 		'pdf_filename' => 'getPdfFilename',
 		'pdf_url' => 'getPdfUrl'
 	];
+
+    /**
+     * @return array
+     */
+    public static function getStatuses () {
+        return [
+            self::STATUS_INITIAL => __('Initial'),
+            self::STATUS_CREDIT => __('Credit'),
+            self::STATUS_CREDITED => __('Credited')
+        ];
+    }
 
 	/**
 	 * @return Debtor

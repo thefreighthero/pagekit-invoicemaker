@@ -63,6 +63,15 @@ class InvoiceFactory {
 		return $this->invoicemaker->createInvoice($debtor, $lines, $template_name, $invoice_group, $data);
 	}
 
+    public function credit ($invoice_number) {
+        return $this->invoicemaker->creditInvoice($invoice_number);
+	}
+
+    /**
+     * @param Invoice $invoice
+     * @param array   $params
+     * @return string
+     */
 	public function renderHtml (Invoice $invoice, $params = []) {
 		return $this->invoicemaker->renderHtml($invoice, $params);
 	}

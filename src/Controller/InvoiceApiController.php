@@ -35,7 +35,7 @@ class InvoiceApiController {
 			$query->where('invoice_group = ?', [$invoice_group]);
 		}
 
-		if (!preg_match('/^(invoice_number|invoice_group|template|amount|created)\s(asc|desc)$/i', $order, $order)) {
+		if (!preg_match('/^(invoice_number|ext_key|invoice_group|template|amount|created)\s(asc|desc)$/i', $order, $order)) {
 			$order = [1 => 'invoice_number', 2 => 'desc'];
 		}
 
