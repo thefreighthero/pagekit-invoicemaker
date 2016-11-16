@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Pagekit 1.0.5 (bixie/invoicemaker, messages)\n"
-"POT-Creation-Date: 2016-07-19 13:24+0000\n"
+"POT-Creation-Date: 2016-10-26 11:42+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,6 +36,24 @@ msgstr ""
 msgid "Invoicemaker settings"
 msgstr ""
 
+msgid "Invoice %invoice_number% not found!"
+msgstr ""
+
+msgid "Invoice %invoice_number% already has been credited by invoice %credit_invoice_number%!"
+msgstr ""
+
+msgid "Invoice %invoice_number% already is a credit invoice!"
+msgstr ""
+
+msgid "Initial"
+msgstr ""
+
+msgid "Credit"
+msgstr ""
+
+msgid "Credited"
+msgstr ""
+
 msgid "To:"
 msgstr ""
 
@@ -52,6 +70,9 @@ msgid "Invoice date"
 msgstr ""
 
 msgid "Invoice number"
+msgstr ""
+
+msgid "Credit for invoice"
 msgstr ""
 
 msgid "Description"
@@ -76,6 +97,9 @@ msgid "Edit invoice"
 msgstr ""
 
 msgid "External key"
+msgstr ""
+
+msgid "Status"
 msgstr ""
 
 msgid "Save"
@@ -181,6 +205,9 @@ msgid "PDF template"
 msgstr ""
 
 msgid "Title"
+msgstr ""
+
+msgid "Credit title"
 msgstr ""
 
 msgid "Creditor address"
