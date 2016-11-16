@@ -55,7 +55,7 @@ tr.total td:last-child {
     padding-left: 50%;
 }
 
-#subline {
-    padding: 50px 0 0 0;
+#subline, #message {
+    padding: 40px 0 0 0;
     text-align: center;
 }

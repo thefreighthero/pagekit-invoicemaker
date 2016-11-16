@@ -5,7 +5,7 @@
  * @var bool								  $isCredit
  */
 use Pagekit\Application as App;
-use Bixie\Framework\Helpers\DateHelper;
+use Bixie\PkFramework\Helpers\DateHelper;
 
 ?>
 <html>
@@ -32,6 +32,8 @@ use Bixie\Framework\Helpers\DateHelper;
 	<?php if ($invoice->getDebtor()->city) : ?><?= $invoice->getDebtor()->city ?><?php endif; ?>
 	</div>
 <?php endif; ?>
+<?php if ($invoice->getDebtor()->county) : ?><div><?= $invoice->getDebtor()->county ?></div><?php endif; ?>
+<?php if ($invoice->getDebtor()->state) : ?><div><?= $invoice->getDebtor()->state ?></div><?php endif; ?>
 <?php if ($invoice->getDebtor()->country) : ?><div><?= $invoice->getDebtor()->country ?></div><?php endif; ?>
 <?php if ($invoice->getDebtor()->debtor_id) : ?><div><strong><?= __('ID') ?></strong>: <?= $invoice->getDebtor()->debtor_id ?></div><?php endif; ?>
 <?php if ($invoice->getDebtor()->debtor_vat) : ?><div><strong><?= __('VAT') ?></strong>: <?= $invoice->getDebtor()->debtor_vat ?></div><?php endif; ?>
@@ -41,6 +43,15 @@ use Bixie\Framework\Helpers\DateHelper;
 
 <div><strong><?= __('Invoice date') ?></strong>: <?= DateHelper::format($invoice->created, 'mediumDate') ?></div>
 <div><strong><?= __('Invoice number') ?></strong>: <?= $invoice->invoice_number ?></div>
+<?php if ($isCredit): ?>
+	<div><strong><?= __('Credit for invoice') ?></strong>: <?= $invoice->get('credit_for') ?></div>
+<?php endif ?>
+<?php if ($invoice->get('internal_reference')): ?>
+<div><strong><?= __('Our reference') ?></strong>: <?= $invoice->get('internal_reference') ?></div>
+<?php endif ?>
+<?php if ($invoice->get('reference')): ?>
+<div><strong><?= __('Your reference') ?></strong>: <?= $invoice->get('reference') ?></div>
+<?php endif ?>
 
 <hr/>
 
@@ -74,6 +85,10 @@ use Bixie\Framework\Helpers\DateHelper;
 </tbody>
 
 </table>
+
+<?php if ($invoice->get('payment_info')): ?>
+	<div id="message"><strong><?= $invoice->get('payment_info') ?></strong></div>
+<?php endif ?>
 
 <div id="subline"><?= $template->markdown('subline') ?></div>
 
