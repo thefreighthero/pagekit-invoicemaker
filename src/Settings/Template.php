@@ -3,7 +3,7 @@
 
 namespace Bixie\Invoicemaker\Settings;
 
-use Bixie\Framework\Traits\JsonSerializableTrait;
+use Bixie\PkFramework\Traits\JsonSerializableTrait;
 use Bixie\Invoicemaker\InvoicemakerException;
 use Bixie\Invoicemaker\InvoicemakerModule;
 use Bixie\Invoicemaker\Model\Invoice;

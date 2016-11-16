@@ -3,7 +3,7 @@
 
 namespace Bixie\Invoicemaker\Settings;
 
-use Bixie\Framework\Traits\JsonSerializableTrait;
+use Bixie\PkFramework\Traits\JsonSerializableTrait;
 use Pagekit\Application as App;
 
 class InvoiceGroup implements \JsonSerializable {

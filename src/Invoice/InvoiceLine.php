@@ -2,7 +2,7 @@
 
 namespace Bixie\Invoicemaker\Invoice;
 
-use Bixie\Framework\Traits\JsonSerializableTrait;
+use Bixie\PkFramework\Traits\JsonSerializableTrait;
 use Pagekit\Application as App;
 
 

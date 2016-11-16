@@ -2,7 +2,7 @@
 
 namespace Bixie\Invoicemaker\Invoice;
 
-use Bixie\Framework\Traits\JsonSerializableTrait;
+use Bixie\PkFramework\Traits\JsonSerializableTrait;
 use Pagekit\Application as App;
 
 class Debtor implements \JsonSerializable {
@@ -15,6 +15,8 @@ class Debtor implements \JsonSerializable {
 	public $address_2 = '';
 	public $zip_code = '';
 	public $city = '';
+	public $county = '';
+	public $state = '';
 	public $country = '';
 	public $email = '';
 	public $debtor_id = '';
