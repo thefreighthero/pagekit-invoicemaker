@@ -15,8 +15,8 @@ class Invoice implements \JsonSerializable {
 
 	use DataModelTrait, InvoiceModelTrait;
 
-    /* Invoice inital and valid. */
-    const STATUS_INITIAL = 'INITAL';
+    /* Invoice initial and valid. */
+    const STATUS_INITIAL = 'INITIAL';
 
     /* Invoice credit. */
     const STATUS_CREDIT = 'CREDIT';
@@ -30,7 +30,7 @@ class Invoice implements \JsonSerializable {
 	 * @Column(type="string")
 	 * @var string
 	 */
-	public $status = 'INITAL';
+	public $status = 'INITIAL';
 	/**
 	 * @Column(type="string")
 	 * @var string

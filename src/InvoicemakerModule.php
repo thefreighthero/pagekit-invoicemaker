@@ -39,7 +39,7 @@ class InvoicemakerModule extends Module {
 		$app['locator']->add('invoicemakerInvoices:', $this->getPdfPath());
 		
 		$this->registerPdfTemplate('default', 'bixie/invoicemaker:templates/default');
-	}
+    }
 
 	/**
 	 * @return InvoiceGroup[]
@@ -197,6 +197,7 @@ class InvoicemakerModule extends Module {
             $invoice->template,
             $invoice->invoice_group,
             array_merge([
+                'credit_for' => $invoice->invoice_number,
                 'ext_key' => $invoice->ext_key,
                 'amount' => $invoice->amount * -1,
             ], $invoice->data)
