@@ -14,7 +14,7 @@ use Bixie\PkFramework\Helpers\DateHelper;
 </head>
 <body>
 <?php if ($template->get('pdf_background')) : ?>
-	<div id="background"><img src="<?=App::locator()->get($template->get('pdf_background'))?>" height="100%" width="100%"></div>
+	<div id="background"><img src="<?=App::locator()->get($template->get('pdf_background'))?>" height="auto" width="100%"></div>
 <?php endif; ?>
 
 <div id="creditor"><?= $template->markdown('creditor_address') ?></div>

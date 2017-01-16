@@ -6,6 +6,7 @@
 
 body {
     padding: 4cm 2cm 5cm 2cm;
+    background: #ffffff;
 }
 #background { position: fixed; bottom: 0; right: 0; top: 0; left: 0; z-index: -1; }
 
