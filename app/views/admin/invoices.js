@@ -8,7 +8,7 @@ module.exports = {
         return _.merge({
             invoices: false,
             config: {
-                filter: this.$session.get('bixie.invoicemaker.invoices.filter', {order: 'invoice_number desc', template: '', invoice_group: ''})
+                filter: this.$session.get('bixie.invoicemaker.invoices.filter', {order: 'invoice_number desc', search: '', template: '', invoice_group: ''})
             },
             pages: 0,
             count: '',

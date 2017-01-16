@@ -23,22 +23,31 @@ class InvoiceApiController {
 	 */
 	public function indexAction ($filter = [], $page = 0) {
 		$query = Invoice::query();
-		$filter = array_merge(array_fill_keys(['template', 'invoice_group', 'order', 'limit'], ''), $filter);
+		$filter = array_merge(array_fill_keys(['template', 'invoice_group', 'search', 'ext_key', 'order', 'limit'], ''), $filter);
 
 		extract($filter, EXTR_SKIP);
 
 		if (!empty($template)) {
-			$query->where('template = ?', [$template]);
+			$query->where('template = :template', compact('template'));
 		}
 
 		if (!empty($invoice_group)) {
-			$query->where('invoice_group = ?', [$invoice_group]);
+			$query->where('invoice_group = :invoice_group', compact('invoice_group'));
 		}
 
-		if (!preg_match('/^(invoice_number|ext_key|invoice_group|template|amount|created)\s(asc|desc)$/i', $order, $order)) {
+		if (!empty($ext_key)) {
+			$query->where('ext_key = :ext_key', compact('ext_key'));
+		}
+
+        if ($search) {
+            $query->where(function ($query) use ($search) {
+                $query->orWhere(['invoice_number LIKE :search', 'ext_key LIKE :search', 'debtor LIKE :search'], ['search' => "%{$search}%"]);
+            });
+        }
+
+        if (!preg_match('/^(invoice_number|ext_key|invoice_group|template|amount|created)\s(asc|desc)$/i', $order, $order)) {
 			$order = [1 => 'invoice_number', 2 => 'desc'];
 		}
-
 
 		$limit = (int)$limit ?: 20;
 		$count = $query->count();
@@ -135,7 +144,7 @@ class InvoiceApiController {
 	/**
 	 * @Route("/pdf/{invoice_number}", name="pdf")
 	 * @Request({"invoice_number": "string", "key": "string", "inline": "bool"})
-	 * @Access("invoicemaker: manage invoices")
+	 * @Access("invoicemaker: view invoices")
 	 * @param integer $invoice_number Invoice bumber
 	 * @param string  $key            session key
 	 * @param bool    $inline
@@ -150,9 +159,8 @@ class InvoiceApiController {
 		}
 
 		if (!$invoicemaker->checkDownloadKey($invoice, $key)) {
-			App::abort(400, __('Key not valid.'));
+			App::abort(403, __('Key not valid.'));
 		}
-
 
 		if ($filename = $invoice->pdf_file and $path = $invoicemaker->getPdfPath() . '/' . $filename) {
 			//existing file

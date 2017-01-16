@@ -94,9 +94,13 @@ return [
 			'title' => 'Manage settings'
 		],
 
+		'invoicemaker: view invoices' => [
+			'title' => 'View invoices'
+		],
+
 		'invoicemaker: manage invoices' => [
 			'title' => 'Manage invoices'
-		]
+		],
 
 	],
 

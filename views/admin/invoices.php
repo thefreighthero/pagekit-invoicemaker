@@ -1,6 +1,6 @@
 <?php $view->script('invoices-invoicemaker', 'bixie/invoicemaker:app/bundle/invoicemaker-invoices.js', ['vue']) ?>
 
-<div id="invoicemaker-invoices" class="uk-text uk-text-horizontal" v-cloak>
+<div id="invoicemaker-invoices" class="uk-form uk-form-horizontal" v-cloak>
 
 	<div class="uk-margin uk-flex uk-flex-space-between uk-flex-wrap" data-uk-margin>
 		<div class="uk-flex uk-flex-middle uk-flex-wrap" data-uk-margin>
@@ -16,7 +16,13 @@
 				</ul>
 			</div>
 
-		</div>
+            <div class="pk-search">
+                <div class="uk-search">
+                    <input class="uk-search-field" type="text" v-model="config.filter.search" debounce="300">
+                </div>
+            </div>
+
+        </div>
 		<div class="uk-position-relative" data-uk-margin>
 
 			<div>
@@ -27,7 +33,7 @@
 		</div>
 	</div>
 
-	<div class="uk-overflow-container">
+	<div class="uk-overflow-container uk-form">
 		<table class="uk-table uk-table-hover uk-table-middle">
 			<thead>
 			<tr>
