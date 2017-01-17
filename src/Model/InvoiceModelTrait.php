@@ -39,6 +39,19 @@ trait InvoiceModelTrait {
 	}
 
 	/**
+	 * @param $ext_key
+	 * @return array
+	 */
+	public static function openSumByExternKey ($ext_key) {
+		$res = self::getConnection()
+			->createQueryBuilder()
+			->from('@invoicemaker_invoice')
+			->where(compact('ext_key'))
+			->execute('SUM(amount - amount_paid) AS open_sum')->fetch(\PDO::FETCH_ASSOC);
+		return $res['open_sum'];
+	}
+
+	/**
 	 * @param $invoice_group_name
 	 * @return bool
 	 */

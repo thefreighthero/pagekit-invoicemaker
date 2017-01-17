@@ -240,6 +240,17 @@ class InvoicemakerModule extends Module {
 	}
 
 	/**
+	 * @param $ext_key
+	 * @return float
+	 */
+	public function getOpenSumByExternKey ($ext_key) {
+		if ($sum = Invoice::openSumByExternKey($ext_key)) {
+			return (float) $sum;
+		}
+		return 0;
+	}
+
+	/**
 	 * @param InvoiceGroup $invoiceGroup
 	 * @param array        $data
 	 * @return string
