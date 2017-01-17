@@ -3,6 +3,7 @@
 namespace Bixie\Invoicemaker\Controller;
 
 use Bixie\Invoicemaker\InvoicemakerException;
+use Bixie\Invoicemaker\Model\Invoice;
 use Pagekit\Application as App;
 use Bixie\Invoicemaker\InvoicemakerModule;
 
@@ -17,6 +18,19 @@ class InvoicemakerController {
 	 */
 	public function indexAction ($filter = [], $page = null) {
 
+//        foreach (Invoice::where('status = ?', ['CREDIT'])->get() as $invoice) {
+//            $invoice->amount_paid = $invoice->amount;
+//            $invoice->payments = [[
+//                'amount' => $invoice->amount,
+//                'date' => (new \DateTime())->format(\DATE_ATOM),
+//                'via' => __('Credit invoice'),
+//                'transaction_id' => '',
+//            ]];
+//            $invoice->save();
+//
+//        }
+
+
 		/** @var InvoicemakerModule $invoicemaker */
 		$invoicemaker = App::module('bixie/invoicemaker');
 		return [
@@ -25,8 +39,9 @@ class InvoicemakerController {
 				'name' => 'bixie/invoicemaker/admin/invoices.php'
 			],
 			'$data' => [
-				'templates' => $invoicemaker->getInvoiceGroups(),
-                'groups' => $invoicemaker->getTemplates(),
+				'groups' => $invoicemaker->getInvoiceGroups(),
+                'templates' => $invoicemaker->getTemplates(),
+                'statuses' => Invoice::getStatuses(),
 				'config' => [
 					'filter' => (object) $filter,
 					'page' => $page

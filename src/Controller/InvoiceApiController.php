@@ -22,8 +22,8 @@ class InvoiceApiController {
 	 * @Access("invoicemaker: manage invoices")
 	 */
 	public function indexAction ($filter = [], $page = 0) {
-		$query = Invoice::query();
-		$filter = array_merge(array_fill_keys(['template', 'invoice_group', 'search', 'ext_key', 'order', 'limit'], ''), $filter);
+		$query = Invoice::query()->select('*, amount - amount_paid AS amount_open');
+		$filter = array_merge(array_fill_keys(['template', 'invoice_group', 'only', 'status', 'search', 'ext_key', 'order', 'limit'], ''), $filter);
 
 		extract($filter, EXTR_SKIP);
 
@@ -39,13 +39,21 @@ class InvoiceApiController {
 			$query->where('ext_key = :ext_key', compact('ext_key'));
 		}
 
+		if (!empty($status)) {
+			$query->where('status = :status', compact('status'));
+		}
+
+		if (!empty($only_open)) {
+			$query->where('amount - amount_paid > 0');
+		}
+
         if ($search) {
             $query->where(function ($query) use ($search) {
                 $query->orWhere(['invoice_number LIKE :search', 'ext_key LIKE :search', 'debtor LIKE :search'], ['search' => "%{$search}%"]);
             });
         }
 
-        if (!preg_match('/^(invoice_number|ext_key|invoice_group|template|amount|created)\s(asc|desc)$/i', $order, $order)) {
+        if (!preg_match('/^(invoice_number|ext_key|invoice_group|template|amount|amount_open|created)\s(asc|desc)$/i', $order, $order)) {
 			$order = [1 => 'invoice_number', 2 => 'desc'];
 		}
 
@@ -109,6 +117,35 @@ class InvoiceApiController {
 		}
 
 		return ['message' => 'success'];
+	}
+
+	/**
+	 * @Route("/credit/{id}", methods="POST", name="credit")
+	 * @Request({"id": "integer"}, csrf=true)
+	 * @Access("invoicemaker: manage invoices")
+	 */
+	public function creditAction($id) {
+		/** @var InvoicemakerModule $invoicemaker */
+		$invoicemaker = App::module('bixie/invoicemaker');
+
+		if (!$invoice = Invoice::find($id)) {
+			App::abort(404, __('Invoice not found'));
+		}
+        try {
+
+            if ($credit_invoice = $invoicemaker->creditInvoice($invoice->invoice_number)) {
+
+                return [
+                    'invoice' => $invoice,
+                    'credit_invoice' => $credit_invoice,
+                ];
+
+            }
+
+        } catch (\Exception $e) {
+            App::abort(500, __('Error in creating Credit invoice'));
+        }
+
 	}
 
 	/**

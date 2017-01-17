@@ -7,7 +7,8 @@ module.exports = {
             invoice: {
                 debtor: {},
                 invoice_lines: [],
-                data: {}
+                payments: [],
+                data: {},
             },
             statuses: [],
             templates: [],
@@ -15,11 +16,19 @@ module.exports = {
         }, window.$data);
     },
 
+    created() {
+        if (!_.isArray(this.invoice.payments)) {
+            this.invoice.payments = [];
+        }
+        this.invoice.amount = Number(this.invoice.amount);
+        this.invoice.amount_paid = Number(this.invoice.amount_paid);
+    },
+
     ready() {
-        this.Invoices = this.$resource('api/invoicemaker/invoice{/id}', {}, {'rerender': {
-            method: 'get',
-            url: 'api/invoicemaker/invoice/rerender{/id}'
-        }});
+        this.Invoices = this.$resource('api/invoicemaker/invoice{/id}', {}, {
+            'rerender': {method: 'get', url: 'api/invoicemaker/invoice/rerender{/id}'},
+            'credit': {method: 'post', url: 'api/invoicemaker/invoice/credit{/id}'},
+        });
     },
 
     computed: {
@@ -56,11 +65,25 @@ module.exports = {
             });
         },
 
+        credit() {
+            this.Invoices.credit({id: this.invoice.id}, {}).then((res) => {
+                this.$notify(this.$trans('Credit invoice %invoice_number% created.', {
+                    'invoice_number': res.data.invoice.invoice_number
+                }), 'success');
+            }, res => {
+                this.$notify(res.data.message || res.data, 'danger');
+            });
+        },
+
         getStatusText(status) {
             return this.statuses[status] || status;
         }
 
-    }
+    },
+
+    components: {
+        'invoice-payments': require('../../components/invoice-payments.vue'),
+    },
 
 };
 

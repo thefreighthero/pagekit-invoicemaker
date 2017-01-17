@@ -1,6 +1,5 @@
 <?php
-$view->style('codemirror');
-$view->script('invoice-edit', 'bixie/invoicemaker:app/bundle/invoicemaker-invoice.js', ['vue', 'editor']);
+$view->script('invoice-edit', 'bixie/invoicemaker:app/bundle/invoicemaker-invoice.js', ['bixie-pkframework']);
 $iframe_src = $app->url('@invoicemaker/api/invoice/html', [
 	'invoice_number' => $invoice->invoice_number,
 	'key' => $app->module('bixie/invoicemaker')->getDownloadKey($invoice)
@@ -37,17 +36,21 @@ $iframe_src = $app->url('@invoicemaker/api/invoice/html', [
 			<div class="pk-width-sidebar">
 
 				<div class="uk-form-row">
-					<span class="uk-form-label">{{ 'Download PDF' | trans }}</span>
-					<div class="uk-form-controls">
-						<a :href="invoice.pdf_url" download><i class="uk-icon-external-link uk-margin-small-right"></i>
-							{{ invoice.pdf_filename }}</a>
+					<span class="uk-form-label">{{ 'PDF File' | trans }}</span>
+					<div class="uk-form-controls uk-form-controls-text">
+						<a :href="invoice.pdf_url" :title="$trans('Download')" data-uk-tooltip download>
+                            <i class="uk-icon-external-link uk-margin-small-right"></i></a>
+                        <a :href="$url(invoice.pdf_url, {inline: 1})" class="uk-margin-small-right"
+                           :title="$trans('View')" data-uk-tooltip data-uk-lightbox="" data-lightbox-type="iframe">
+                            <i class="uk-icon-search uk-margin-small-right"></i></a>
+							{{ invoice.pdf_filename }}
 					</div>
 				</div>
 
 				<div v-if="invoice.pdf_file" class="uk-form-row">
 					<span class="uk-form-label">{{ 'PDF file' | trans }}</span>
-					<div class="uk-form-controls">
-						<button type="button" class="uk-button uk-button-primary" @click="rerender">{{ 'Rerender PDF file' | trans }}</button>
+					<div class="uk-form-controls uk-text-right">
+						<button type="button" class="uk-button" @click="rerender">{{ 'Rerender PDF file' | trans }}</button>
 					</div>
 				</div>
 
@@ -59,6 +62,45 @@ $iframe_src = $app->url('@invoicemaker/api/invoice/html', [
 						</select>
 					</div>
 				</div>
+
+                <div v-if="invoice.status === 'INITIAL'" class="uk-form-row">
+                    <span class="uk-form-label">{{ 'Credit invoice' | trans }}</span>
+                    <div class="uk-form-controls uk-text-right">
+                        <button type="button" class="uk-button" @click="credit">{{ 'Create credit invoice' | trans }}</button>
+                    </div>
+                </div>
+
+                <h3>{{ 'Payments' | trans }}</h3>
+
+                <invoice-payments :invoice.sync="invoice" :on-save="save"></invoice-payments>
+
+                <hr/>
+
+                <div class="uk-grid uk-grid-small" data-uk-grid-margin>
+                    <div class="uk-width-2-3">
+                        <p>Total amount</p>
+                    </div>
+                    <div class="uk-width-1-3 uk-text-right">
+                        <span>{{ invoice.amount | currency '€ ' }}</span>
+                    </div>
+                </div>
+                <div class="uk-grid uk-grid-small uk-margin-small-top" data-uk-grid-margin>
+                    <div class="uk-width-2-3">
+                        <p>Paid amount</p>
+                    </div>
+                    <div class="uk-width-1-3 uk-text-right">
+                        <span>{{ invoice.amount_paid | currency '€ ' }}</span>
+                    </div>
+                </div>
+                <div class="uk-grid uk-grid-small uk-margin-small-top" data-uk-grid-margin>
+                    <div class="uk-width-2-3">
+                        <p>Open amount</p>
+                    </div>
+                    <div class="uk-width-1-3 uk-text-right">
+                        <strong>{{ (invoice.amount - invoice.amount_paid) | currency '€ ' }}</strong>
+                    </div>
+                </div>
+
 
 				<h3>{{ 'Debtor' | trans }}</h3>
 

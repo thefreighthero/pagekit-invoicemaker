@@ -5,6 +5,7 @@ namespace Bixie\Invoicemaker\Model;
 
 use Bixie\Invoicemaker\Invoice\Debtor;
 use Bixie\Invoicemaker\Invoice\InvoiceLineCollection;
+use Bixie\Invoicemaker\Invoice\Payment;
 use Pagekit\Application as App;
 use Pagekit\System\Model\DataModelTrait;
 
@@ -62,6 +63,16 @@ class Invoice implements \JsonSerializable {
 	 */
 	public $amount = 0.00;
 	/**
+	 * @Column(type="decimal")
+	 * @var float
+	 */
+	public $amount_paid = 0.00;
+    /**
+     * @Column(type="json_array")
+     * @var array
+     */
+    public $payments;
+	/**
 	 * @Column(type="string")
 	 * @var string
 	 */
@@ -79,8 +90,9 @@ class Invoice implements \JsonSerializable {
 
 	/** @var array */
 	protected static $properties = [
+		'amount_open' => 'getAmountOpen',
 		'pdf_filename' => 'getPdfFilename',
-		'pdf_url' => 'getPdfUrl'
+		'pdf_url' => 'getPdfUrl',
 	];
 
     /**
@@ -116,6 +128,10 @@ class Invoice implements \JsonSerializable {
 
 	public function getPdfFilename () {
 		return sprintf('%s - %s.pdf', $this->invoice_number, $this->getDebtor()->name);
+	}
+
+	public function getAmountOpen () {
+		return $this->amount - $this->amount_paid;
 	}
 
 	/**

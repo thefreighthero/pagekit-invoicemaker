@@ -86,7 +86,7 @@ class InvoicemakerModule extends Module {
 		$templates = array_filter($this->templates, function ($template) use ($template_name) {
 			return $template->name == $template_name;
 		});
-		return isset($templates[0]) ? $templates[0] : false;
+		return count($templates) ? reset($templates) : false;
 	}
 
 	/**
@@ -200,9 +200,17 @@ class InvoicemakerModule extends Module {
                 'credit_for' => $invoice->invoice_number,
                 'ext_key' => $invoice->ext_key,
                 'amount' => $invoice->amount * -1,
+                'amount_paid' => $invoice->amount * -1,
             ], $invoice->data)
         );
 
+        $invoice->amount_paid = $invoice->amount;
+        $invoice->payments = [[
+            'amount' => $invoice->amount,
+            'date' => (new \DateTime())->format(\DATE_ATOM),
+            'via' => __('Credit invoice'),
+            'transaction_id' => $credit_invoice->invoice_number,
+        ]];
         $invoice->set('credited_by', $credit_invoice->invoice_number);
         $invoice->save(['status' => Invoice::STATUS_CREDITED]);
 

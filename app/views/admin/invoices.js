@@ -4,60 +4,73 @@ module.exports = {
 
     el: '#invoicemaker-invoices',
 
-    data: function () {
+    data() {
         return _.merge({
             invoices: false,
             config: {
-                filter: this.$session.get('bixie.invoicemaker.invoices.filter', {order: 'invoice_number desc', search: '', template: '', invoice_group: ''})
+                filter: this.$session.get('bixie.invoicemaker.invoices.filter', {
+                    order: 'invoice_number desc',
+                    search: '',
+                    status: '',
+                    only_open: 0,
+                    template: '',
+                    invoice_group: '',
+                    limit: 20,
+                })
             },
             pages: 0,
             count: '',
             roles: [],
             types: {},
+            statuses: {},
             selected: []
         }, window.$data);
     },
 
-    created: function () {
+    created() {
         this.Invoices = this.$resource('api/invoicemaker/invoice{/id}');
         this.$watch('config.page', this.load, {immediate: true});
     },
 
     methods: {
 
-        load: function () {
-            return this.Invoices.query(this.config).then(function (res) {
+        load() {
+            return this.Invoices.query(this.config).then(res => {
                 this.$set('invoices', res.data.invoices);
                 this.$set('pages', res.data.pages);
                 this.$set('count', res.data.count);
             });
         },
 
-        active: function (invoice) {
+        active(invoice) {
             return this.selected.indexOf(invoice.id) !== -1;
         },
 
-        getSelected: function () {
+        getSelected() {
             return this.invoices.filter(function (invoice) { return this.selected.indexOf(invoice.id) !== -1; }, this);
         },
 
-        getTypeLabel: function (name) {
+        getTypeLabel(name) {
             return this.types[name] ? this.types[name].label : name;
         },
 
-        getRoles: function (invoice) {
-            var roles_invoice = this.$trans('All roles');
-            if (invoice.roles.length && invoice.roles.length !== this.roles.length) {
-                roles_invoice = invoice.roles.map(function (id) {
-                    return _.find(this.roles, 'id', id).name;
-                }, this).join(', ');
-            }
-            return roles_invoice;
+        getStatusText(status) {
+            return this.statuses[status] || status;
         },
 
-        removeInvoices: function () {
+        nrPayments(invoice) {
+            return _.size(invoice.payments);
+        },
 
-            this.Invoices.delete({id: 'bulk'}, {ids: this.selected}).then(function () {
+        save(invoice) {
+            return this.Invoices.save({id: invoice.id}, {invoice}).then(() => {
+                this.load();
+                this.$notify('Invoice saved.');
+            });
+        },
+
+        removeInvoices() {
+            this.Invoices.delete({id: 'bulk'}, {ids: this.selected}).then(() => {
                 this.load();
                 this.$notify('Invoices(s) deleted.');
             });
@@ -92,6 +105,15 @@ module.exports = {
             return [{label: this.$trans('Filter by'), options: options}];
         },
 
+        statusOptions: function () {
+
+            var options = [];
+            _.forEach(this.statuses, (status, key) => {
+                options.push({value: key, text: status});
+            });
+            return [{label: this.$trans('Filter by'), options: options}];
+        },
+
         groupOptions: function () {
 
             var options = this.groups.map(function (group) {
@@ -99,9 +121,21 @@ module.exports = {
             });
 
             return [{label: this.$trans('Filter by'), options: options}];
-        }
+        },
 
-    }
+        total_amount() {
+            return this.invoices ? this.invoices.reduce((sum, invoice) => sum + Number(invoice.amount), 0) : 0;
+        },
+
+        total_open() {
+            return this.invoices ? this.invoices.reduce((sum, invoice) => sum + Number(invoice.amount_open), 0) : 0;
+        },
+
+    },
+
+    components: {
+        'invoice-payments': require('../../components/invoice-payments.vue'),
+    },
 
 
 };
