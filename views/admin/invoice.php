@@ -155,6 +155,12 @@ $iframe_src = $app->url('@invoicemaker/api/invoice/html', [
 					</div>
 				</div>
 				<div class="uk-form-row">
+					<label for="invoice-debtor-phone" class="uk-form-label">{{ 'Phone' | trans }}</label>
+					<div class="uk-form-controls">
+						<input id="invoice-debtor-phone" name="debtor_phone" class="uk-width-1-1" v-model="invoice.debtor.phone"/>
+					</div>
+				</div>
+				<div class="uk-form-row">
 					<label for="invoice-debtor-debtor_id" class="uk-form-label">{{ 'Debtor ID' | trans }}</label>
 					<div class="uk-form-controls">
 						<input id="invoice-debtor-debtor_id" name="debtor_id" class="uk-width-1-1" v-model="invoice.debtor.debtor_id"/>

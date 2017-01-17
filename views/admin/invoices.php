@@ -72,7 +72,27 @@
 				</td>
 				<td>
 					{{ invoice.debtor.name }}
-				</td>
+
+                    <div class="uk-position-relative uk-float-right"
+                         data-uk-dropdown="pos:'bottom-right', mode: 'hover'">
+                        <a><strong :title="$trans('Details')" data-uk-tooltip="delay: 200">
+                                <i class="uk-icon-info-circle"></i>
+                            </strong></a>
+                        <div class="uk-dropdown">
+                            <div v-if="invoice.debtor.company">
+                                <i class="uk-icon-building-o uk-icon-justify"></i>{{ invoice.debtor.company }}
+                            </div>
+                            <div v-if="invoice.debtor.email">
+                                <i class="uk-icon-envelope-o uk-icon-justify"></i>
+                                <a :href="`mailto:invoice.debtor.email`">{{ invoice.debtor.email }}</a>
+                            </div>
+                            <div v-if="invoice.debtor.phone">
+                                <i class="uk-icon-phone uk-icon-justify"></i>{{ invoice.debtor.phone }}
+                            </div>
+                        </div>
+                    </div>
+
+                </td>
 				<td>
 					<em>{{ invoice.ext_key }}</em>
 				</td>
@@ -91,7 +111,7 @@
                         <a><strong :title="$trans('Add/view payments')" data-uk-tooltip="delay: 200">
                                 {{ nrPayments(invoice) }}
                             </strong></a>
-                        <div class="uk-dropdown uk-dropdown-large">
+                        <div class="uk-dropdown">
                             <invoice-payments :invoice.sync="invoice" :on-save="save"></invoice-payments>
                         </div>
                     </div>

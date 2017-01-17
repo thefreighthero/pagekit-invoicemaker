@@ -19,6 +19,7 @@ class Debtor implements \JsonSerializable {
 	public $state = '';
 	public $country = '';
 	public $email = '';
+	public $phone = '';
 	public $debtor_id = '';
 	public $debtor_vat = '';
 	public $debtor_coc = '';
