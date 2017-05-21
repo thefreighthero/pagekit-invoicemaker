@@ -136,6 +136,7 @@ class InvoicemakerModule extends Module {
 			'created' => new \DateTime(),
 			'amount' => Arr::get($data, 'amount', ''),
 			'ext_key' => Arr::get($data, 'ext_key', ''),
+            'user_id' => Arr::get($data, 'user_id', App::user()->id),
 			'template' => $template->name,
 			'invoice_number' => $this->getInvoiceNumber($invoiceGroup, $data),
 			'invoice_group' => $invoiceGroup->name,
@@ -199,6 +200,7 @@ class InvoicemakerModule extends Module {
             array_merge([
                 'credit_for' => $invoice->invoice_number,
                 'ext_key' => $invoice->ext_key,
+                'user_id' => $invoice->user_id,
                 'amount' => $invoice->amount * -1,
                 'amount_paid' => $invoice->amount * -1,
             ], $invoice->data)
@@ -218,11 +220,53 @@ class InvoicemakerModule extends Module {
     }
 
     /**
+     * @param Invoice $invoice
+     * @param array   $payment
+     */
+    public function addPayment (Invoice $invoice, $payment) {
+        $transaction_id = Arr::get($payment, 'transaction_id', '');
+        $edited = false;
+        if ($transaction_id) {
+            foreach ($invoice->payments as &$pymnt) {
+                if (!empty($pymnt['transaction_id']) && $pymnt['transaction_id'] == $transaction_id) {
+                    $edited = true;
+                    $pymnt = array_merge($pymnt, $payment);
+                    break;
+                }
+            }
+        }
+        if (!$edited) {
+            $invoice->payments[] = array_merge([
+                'amount' => 0,
+                'date' => (new \DateTime())->format(DATE_ATOM),
+                'via' => '',
+                'transaction_id' => '',
+            ], $payment);
+        }
+        $invoice->amount_paid = array_reduce($invoice->payments, function ($total, $pymnt) {
+            return $total + $pymnt['amount'];
+        }, 0);
+    }
+
+    /**
 	 * @param $ext_key
-	 * @return array|Invoice|bool
+     * @param array $wheres
+	 * @return Invoice[]|bool
 	 */
-	public function getByExternKey ($ext_key) {
-		if ($invoices = Invoice::byExternKey($ext_key)) {
+	public function getByExternKey ($ext_key, $wheres = []) {
+		if ($invoices = Invoice::byExternKey($ext_key, $wheres)) {
+			return array_values($invoices);
+		}
+		return [];
+	}
+
+    /**
+	 * @param int $user_id
+     * @param array $wheres
+	 * @return Invoice[]|bool
+	 */
+	public function getByUserId ($user_id, $wheres = []) {
+		if ($invoices = Invoice::getByUserId($user_id, $wheres)) {
 			return array_values($invoices);
 		}
 		return [];
@@ -230,10 +274,11 @@ class InvoicemakerModule extends Module {
 
 	/**
 	 * @param $ext_key
+     * @param array $wheres
 	 * @return float
 	 */
-	public function getSumByExternKey ($ext_key) {
-		if ($sum = Invoice::sumByExternKey($ext_key)) {
+	public function getSumByExternKey ($ext_key, $wheres = []) {
+		if ($sum = Invoice::sumByExternKey($ext_key, $wheres)) {
 			return (float) $sum;
 		}
 		return 0;
@@ -241,10 +286,11 @@ class InvoicemakerModule extends Module {
 
 	/**
 	 * @param $ext_key
+     * @param array $wheres
 	 * @return float
 	 */
-	public function getOpenSumByExternKey ($ext_key) {
-		if ($sum = Invoice::openSumByExternKey($ext_key)) {
+	public function getOpenSumByExternKey ($ext_key, $wheres = []) {
+		if ($sum = Invoice::openSumByExternKey($ext_key, $wheres)) {
 			return (float) $sum;
 		}
 		return 0;
@@ -337,7 +383,7 @@ class InvoicemakerModule extends Module {
 	 * @return string
 	 */
 	protected function getSessionKey (Invoice $invoice) {
-		return sha1(App::system()->config('key') . '.' . App::session()->getId() . '.' . $invoice->id  );
+		return $invoice->getKey(App::session()->getId());
 	}
 
 	/**

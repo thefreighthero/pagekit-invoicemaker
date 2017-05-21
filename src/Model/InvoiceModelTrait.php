@@ -19,34 +19,46 @@ trait InvoiceModelTrait {
 
 	/**
 	 * @param $ext_key
+     * @param array $wheres
 	 * @return array
 	 */
-	public static function byExternKey ($ext_key) {
-		return static::where(compact('ext_key'))->get();
+	public static function byExternKey ($ext_key, $wheres = []) {
+		return static::where(array_merge(compact('ext_key'), $wheres))->get();
+	}
+
+	/**
+	 * @param $user_id
+     * @param array $wheres
+	 * @return array
+	 */
+	public static function getByUserId ($user_id, $wheres = []) {
+		return static::where(array_merge(compact('user_id'), $wheres))->get();
 	}
 
 	/**
 	 * @param $ext_key
+     * @param array $wheres
 	 * @return array
 	 */
-	public static function sumByExternKey ($ext_key) {
+	public static function sumByExternKey ($ext_key, $wheres = []) {
 		$res = self::getConnection()
 			->createQueryBuilder()
 			->from('@invoicemaker_invoice')
-			->where(compact('ext_key'))
+			->where(array_merge(compact('ext_key'), $wheres))
 			->execute('SUM(amount) AS invoice_sum')->fetch(\PDO::FETCH_ASSOC);
 		return $res['invoice_sum'];
 	}
 
-	/**
-	 * @param $ext_key
-	 * @return array
-	 */
-	public static function openSumByExternKey ($ext_key) {
+    /**
+     * @param       $ext_key
+     * @param array $wheres
+     * @return array
+     */
+	public static function openSumByExternKey ($ext_key, $wheres = []) {
 		$res = self::getConnection()
 			->createQueryBuilder()
 			->from('@invoicemaker_invoice')
-			->where(compact('ext_key'))
+			->where(array_merge(compact('ext_key'), $wheres))
 			->execute('SUM(amount - amount_paid) AS open_sum')->fetch(\PDO::FETCH_ASSOC);
 		return $res['open_sum'];
 	}

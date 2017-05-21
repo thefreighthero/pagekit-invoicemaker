@@ -48,6 +48,11 @@ class Invoice implements \JsonSerializable {
 	 */
 	public $ext_key;
 	/**
+	 * @Column(type="integer")
+	 * @var int
+	 */
+	public $user_id;
+	/**
 	 * @Column(type="string")
 	 * @var string
 	 */
@@ -93,6 +98,7 @@ class Invoice implements \JsonSerializable {
 		'amount_open' => 'getAmountOpen',
 		'pdf_filename' => 'getPdfFilename',
 		'pdf_url' => 'getPdfUrl',
+		'key' => 'getKey',
 	];
 
     /**
@@ -134,7 +140,15 @@ class Invoice implements \JsonSerializable {
 		return $this->amount - $this->amount_paid;
 	}
 
-	/**
+    /**
+     * @param string  $extra
+     * @return string
+     */
+    public function getKey ($extra = '') {
+        return sha1(App::system()->config('key') . '.' . $this->id . $extra);
+    }
+
+    /**
 	 * @param bool $inline
 	 * @return mixed
 	 */

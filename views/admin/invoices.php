@@ -58,7 +58,7 @@
 				<th class="pk-table-min-width-100">
                     <span v-order:amount_open="config.filter.order">{{ 'Open' | trans }}</span>
                     <label class="uk-text-small" :title="$trans('Show only invoices with an amount open')" data-uk-tooltip="delay: 200">
-                        <input type="checkbox" class="uk-margin-small-right uk-form-small"
+                        <input type="checkbox" class="uk-margin-small-right"
                                                         v-model="config.filter.only_open" :true-value="1" :false-value="0" number/>&gt; 0</label>
                  </th>
 				<th>{{ 'PDF' | trans }}</th>
@@ -74,10 +74,8 @@
 					{{ invoice.debtor.name }}
 
                     <div class="uk-position-relative uk-float-right"
-                         data-uk-dropdown="pos:'bottom-right', mode: 'hover'">
-                        <a><strong :title="$trans('Details')" data-uk-tooltip="delay: 200">
-                                <i class="uk-icon-info-circle"></i>
-                            </strong></a>
+                         data-uk-dropdown="pos:'bottom-right', mode: 'hover', delay: 200">
+                        <a><strong><i class="uk-icon-info-circle"></i></strong></a>
                         <div class="uk-dropdown">
                             <div v-if="invoice.debtor.company">
                                 <i class="uk-icon-building-o uk-icon-justify"></i>{{ invoice.debtor.company }}

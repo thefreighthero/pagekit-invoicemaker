@@ -19,13 +19,18 @@ class InvoiceApiController {
 	/**
 	 * @Route("/", methods="GET")
 	 * @Request({"filter": "array", "page":"int"})
-	 * @Access("invoicemaker: manage invoices")
+	 * @Access("invoicemaker: view invoices")
 	 */
 	public function indexAction ($filter = [], $page = 0) {
 		$query = Invoice::query()->select('*, amount - amount_paid AS amount_open');
-		$filter = array_merge(array_fill_keys(['template', 'invoice_group', 'only', 'status', 'search', 'ext_key', 'order', 'limit'], ''), $filter);
+		$filter = array_merge(array_fill_keys(['template', 'invoice_group', 'user_id', 'only', 'status', 'search', 'ext_key', 'order', 'limit'], ''), $filter);
 
 		extract($filter, EXTR_SKIP);
+
+		$user = App::user();
+		if (!$user->hasAccess('manage invoices')) {
+		    $user_id = $user->id;
+        }
 
 		if (!empty($template)) {
 			$query->where('template = :template', compact('template'));
@@ -37,6 +42,10 @@ class InvoiceApiController {
 
 		if (!empty($ext_key)) {
 			$query->where('ext_key = :ext_key', compact('ext_key'));
+		}
+
+		if (!empty($user_id)) {
+			$query->where('user_id = :user_id', compact('user_id'));
 		}
 
 		if (!empty($status)) {

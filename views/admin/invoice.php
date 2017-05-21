@@ -39,7 +39,7 @@ $iframe_src = $app->url('@invoicemaker/api/invoice/html', [
 					<span class="uk-form-label">{{ 'PDF File' | trans }}</span>
 					<div class="uk-form-controls uk-form-controls-text">
 						<a :href="invoice.pdf_url" :title="$trans('Download')" data-uk-tooltip download>
-                            <i class="uk-icon-external-link uk-margin-small-right"></i></a>
+                            <i class="uk-icon-download uk-margin-small-right"></i></a>
                         <a :href="$url(invoice.pdf_url, {inline: 1})" class="uk-margin-small-right"
                            :title="$trans('View')" data-uk-tooltip data-uk-lightbox="" data-lightbox-type="iframe">
                             <i class="uk-icon-search uk-margin-small-right"></i></a>

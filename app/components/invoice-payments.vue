@@ -43,7 +43,7 @@
             return {
                 add_payment: false,
                 new_payment: {
-                    amount: this.invoice.amount,
+                    amount: this.invoice.amount_open,
                     date: new Date(),
                     via: '',
                     transaction_id: '',
@@ -70,7 +70,7 @@
                 }
                 this.invoice.payments.push(_.merge({}, this.new_payment));
                 this.new_payment = {
-                    amount: 0,
+                    amount: this.invoice.amount_open,
                     date: new Date(),
                     via: '',
                     transaction_id: '',

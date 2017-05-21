@@ -81,6 +81,6 @@ class Template implements \JsonSerializable {
 	}
 
 	public function markdown ($key) {
-		return App::content()->applyPlugins(nl2br($this->$key?: $this->get($key, '')), ['markdown' => true]);
+		return App::content()->applyPlugins(nl2br(isset($this->$key) ? $this->$key : $this->get($key, '')), ['markdown' => true]);
 	}
 }
