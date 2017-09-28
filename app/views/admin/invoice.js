@@ -68,7 +68,7 @@ module.exports = {
         credit() {
             this.Invoices.credit({id: this.invoice.id}, {}).then((res) => {
                 this.$notify(this.$trans('Credit invoice %invoice_number% created.', {
-                    'invoice_number': res.data.invoice.invoice_number
+                    'invoice_number': res.data.credit_invoice.invoice_number
                 }), 'success');
             }, res => {
                 this.$notify(res.data.message || res.data, 'danger');

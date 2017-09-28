@@ -14,6 +14,7 @@ class Template implements \JsonSerializable {
 
 	use JsonSerializableTrait {
 		__construct as serializeConstruct;
+		toArray as serializeToArray;
 	}
 
 	public $name = '';
@@ -83,4 +84,17 @@ class Template implements \JsonSerializable {
 	public function markdown ($key) {
 		return App::content()->applyPlugins(nl2br(isset($this->$key) ? $this->$key : $this->get($key, '')), ['markdown' => true]);
 	}
+
+	public function markdownText ($text) {
+		return App::content()->applyPlugins($text, ['markdown' => true]);
+	}
+
+    /**
+     * @param array $data
+     * @param array $ignore
+     * @return array
+     */
+    public function toArray ($data = [], $ignore = []) {
+        return $this->serializeToArray($data, array_merge(['invoicemaker'], $ignore));
+    }
 }

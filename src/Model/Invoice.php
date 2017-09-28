@@ -5,7 +5,6 @@ namespace Bixie\Invoicemaker\Model;
 
 use Bixie\Invoicemaker\Invoice\Debtor;
 use Bixie\Invoicemaker\Invoice\InvoiceLineCollection;
-use Bixie\Invoicemaker\Invoice\Payment;
 use Pagekit\Application as App;
 use Pagekit\System\Model\DataModelTrait;
 
