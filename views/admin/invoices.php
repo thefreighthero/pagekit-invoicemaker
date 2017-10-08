@@ -31,14 +31,6 @@
             </div>
 
         </div>
-		<div class="uk-position-relative" data-uk-margin>
-
-			<div>
-				<a class="uk-button uk-button-primary" :href="$url.route('admin/invoicemaker/invoice/edit')">
-					{{ 'Add invoice' | trans }}</a>
-			</div>
-
-		</div>
 	</div>
 
 	<div class="uk-overflow-container uk-form">
