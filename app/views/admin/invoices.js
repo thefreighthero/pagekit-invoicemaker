@@ -134,6 +134,7 @@ module.exports = {
     },
 
     components: {
+        'invoices-download': require('../../components/invoices-download.vue'),
         'invoice-payments': require('../../components/invoice-payments.vue'),
     },
 

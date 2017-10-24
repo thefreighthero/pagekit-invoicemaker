@@ -31,6 +31,7 @@
             </div>
 
         </div>
+        <invoices-download></invoices-download>
 	</div>
 
 	<div class="uk-overflow-container uk-form">
