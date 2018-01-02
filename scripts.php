@@ -20,15 +20,17 @@ return [
                 $table->addColumn('ext_key', 'string', ['length' => 255, 'notnull' => false]);
                 $table->addColumn('pdf_file', 'string', ['length' => 255, 'notnull' => false]);
 				$table->addColumn('user_id', 'string', ['unsigned' => true, 'notnull' => false]);
+				$table->addColumn('company_id', 'string', ['unsigned' => true, 'notnull' => false]);
 				$table->addColumn('debtor', 'json_array', ['notnull' => false]);
 				$table->addColumn('invoice_lines', 'json_array', ['notnull' => false]);
 				$table->addColumn('data', 'json_array', ['notnull' => false]);
 				$table->setPrimaryKey(['id']);
 				$table->addIndex(['ext_key'], 'INVOICEMAKER_INVOICE_EXT_KEY');
+				$table->addIndex(['company_id'], 'INVOICEMAKER_INVOICE_COMPANY_ID');
 				$table->addUniqueIndex(['invoice_number'], '@INVOICEMAKER_INVOICE_INVOICE_NUMBER');
 			});
 		}
-		
+
     },
 
 	'uninstall' => function ($app) {

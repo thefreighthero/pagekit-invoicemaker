@@ -37,7 +37,7 @@ class InvoicemakerModule extends Module {
 		};
 
 		$app['locator']->add('invoicemakerInvoices:', $this->getPdfPath());
-		
+
 		$this->registerPdfTemplate('default', 'bixie/invoicemaker:templates/default');
     }
 
@@ -137,6 +137,7 @@ class InvoicemakerModule extends Module {
 			'amount' => Arr::get($data, 'amount', ''),
 			'ext_key' => Arr::get($data, 'ext_key', ''),
             'user_id' => Arr::get($data, 'user_id', App::user()->id),
+            'company_id' => Arr::get($data, 'company_id', 0),
 			'template' => $template->name,
 			'invoice_number' => $this->getInvoiceNumber($invoiceGroup, $data),
 			'invoice_group' => $invoiceGroup->name,
