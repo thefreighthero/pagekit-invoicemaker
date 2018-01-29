@@ -39,15 +39,17 @@
 
         props: {'invoice': Object, 'onSave': Function,},
 
-        data: () => ({
-            add_payment: false,
-            new_payment: {
-                amount: this.invoice.amount_open,
-                date: new Date(),
-                via: '',
-                transaction_id: '',
-            },
-        }),
+        data() {
+            return {
+                add_payment: false,
+                new_payment: {
+                    amount: this.invoice.amount_open,
+                    date: new Date(),
+                    via: '',
+                    transaction_id: '',
+                },
+            };
+        },
 
         watch: {
             'invoice.payments': {handler: function () {

@@ -13,26 +13,28 @@ const vm = {
         'invoice-payments': InvoicePayments,
     },
 
-    data: () => _.merge({
-        invoices: false,
-        config: {
-            filter: this.$session.get('bixie.invoicemaker.invoices.filter', {
-                order: 'invoice_number desc',
-                search: '',
-                status: '',
-                only_open: 0,
-                template: '',
-                invoice_group: '',
-                limit: 20,
-            }),
-        },
-        pages: 0,
-        count: '',
-        roles: [],
-        types: {},
-        statuses: {},
-        selected: [],
-    }, window.$data),
+    data() {
+        return _.merge({
+            invoices: false,
+            config: {
+                filter: this.$session.get('bixie.invoicemaker.invoices.filter', {
+                    order: 'invoice_number desc',
+                    search: '',
+                    status: '',
+                    only_open: 0,
+                    template: '',
+                    invoice_group: '',
+                    limit: 20,
+                }),
+            },
+            pages: 0,
+            count: '',
+            roles: [],
+            types: {},
+            statuses: {},
+            selected: [],
+        }, window.$data);
+    },
 
     computed: {
 
