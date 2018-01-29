@@ -51,20 +51,18 @@
 </template>
 <script>
 
-    module.exports = {
+    export default {
 
-        name: 'invoices-download',
+        name: 'InvoicesDownload',
 
-        data() {
-            return {
-                base_url: 'admin/invoicemaker/download',
-                filter: {
-                    date_from: new Date(),
-                    date_to: new Date(),
-                    only_open: 0,
-                },
-            }
-        },
+        data: () => ({
+            base_url: 'admin/invoicemaker/download',
+            filter: {
+                date_from: new Date(),
+                date_to: new Date(),
+                only_open: 0,
+            },
+        }),
 
         computed: {
             downloadUrl() {

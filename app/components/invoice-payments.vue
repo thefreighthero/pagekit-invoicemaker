@@ -33,34 +33,32 @@
 </template>
 <script>
 
-    module.exports = {
+    export default {
 
-        name: 'invoice-payments',
+        name: 'InvoicePayments',
 
-        props: ['invoice', 'onSave'],
+        props: {'invoice': Object, 'onSave': Function,},
 
-        data() {
-            return {
-                add_payment: false,
-                new_payment: {
-                    amount: this.invoice.amount_open,
-                    date: new Date(),
-                    via: '',
-                    transaction_id: '',
-                },
-            }
+        data: () => ({
+            add_payment: false,
+            new_payment: {
+                amount: this.invoice.amount_open,
+                date: new Date(),
+                via: '',
+                transaction_id: '',
+            },
+        }),
+
+        watch: {
+            'invoice.payments': {handler: function () {
+                    this.invoice.amount_paid = _.reduce(this.invoice.payments, (sum, payment) => sum + Number(payment.amount), 0);
+                }, deep:  true, immediate: true,},
         },
 
         created() {
             if (!_.isArray(this.invoice.payments)) {
                 this.invoice.payments = [];
             }
-        },
-
-        watch: {
-            'invoice.payments': {handler: function () {
-                this.invoice.amount_paid = _.reduce(this.invoice.payments, (sum, payment) => sum + Number(payment.amount), 0);
-            }, deep:  true, immediate: true},
         },
 
         methods: {
@@ -90,9 +88,22 @@
         components: {
             'invoice-payment': {
 
-                name: 'invoice-payment',
+                name: 'InvoicePayment',
 
-                props: ['payment'],
+                props: {'payment': Object,},
+
+                data() {
+                    return {
+                        edit: false,
+                    }
+                },
+
+                methods: {
+                    save() {
+                        this.edit = false;
+                        this.$parent.save();
+                    },
+                },
 
                 template: `<li>
                 <div v-if="edit">
@@ -128,19 +139,6 @@
                    </div>
                 </div>
             </li>`,
-
-                data() {
-                    return {
-                        edit: false,
-                    }
-                },
-
-                methods: {
-                    save() {
-                        this.edit = false;
-                        this.$parent.save();
-                    },
-                },
 
             },
         },
