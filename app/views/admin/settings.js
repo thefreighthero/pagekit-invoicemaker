@@ -1,5 +1,6 @@
 /*global Vue, _*/
 
+// @vue/component
 const vm = {
 
     el: '#invoicemaker-settings',
@@ -40,4 +41,3 @@ const vm = {
 };
 
 Vue.ready(vm);
-export default vm;

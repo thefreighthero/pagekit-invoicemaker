@@ -2,6 +2,7 @@
 import InvoicesDownload from '../../components/invoices-download.vue';
 import InvoicePayments from '../../components/invoice-payments.vue';
 
+// @vue/component
 const vm = {
 
     el: '#invoicemaker-invoices',
@@ -145,4 +146,3 @@ const vm = {
 };
 
 Vue.ready(vm);
-export default vm;

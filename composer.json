@@ -2,7 +2,7 @@
   "name": "bixie/invoicemaker",
   "module": "bixie/invoicemaker",
   "type": "pagekit-extension",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "title": "Bixie Invoicemaker",
   "description": "Create invoices in PDF.",
   "license": "MIT",

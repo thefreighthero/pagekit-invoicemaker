@@ -4,7 +4,6 @@
 
         <button @click="$refs.modal.open" type="button" class="uk-button">{{ 'Download invoices' | trans }}</button>
 
-
         <v-modal v-ref:modal>
             <a class="focus"></a>
             <div class="uk-form">
@@ -42,7 +41,7 @@
             <div class="uk-modal-footer uk-text-right">
                 <a class="uk-button uk-modal-close">{{ 'Close' | trans }}</a>
                 <a :href="downloadUrl" class="uk-button uk-button-primary uk-margin-small-left">
-                    <i class="uk-icon-download uk-margin-small-right"></i>{{ 'Download invoices' | trans }}</a>
+                <i class="uk-icon-download uk-margin-small-right"></i>{{ 'Download invoices' | trans }}</a>
             </div>
 
         </v-modal>
@@ -51,26 +50,26 @@
 </template>
 <script>
 
-    export default {
+export default {
 
-        name: 'InvoicesDownload',
+    name: 'InvoicesDownload',
 
-        data: () => ({
-            base_url: 'admin/invoicemaker/download',
-            filter: {
-                date_from: new Date(),
-                date_to: new Date(),
-                only_open: 0,
-            },
-        }),
-
-        computed: {
-            downloadUrl() {
-                return this.$url(this.base_url, {filter: this.filter});
-            },
+    data: () => ({
+        base_url: 'admin/invoicemaker/download',
+        filter: {
+            date_from: new Date(),
+            date_to: new Date(),
+            only_open: 0,
         },
+    }),
 
-    };
+    computed: {
+        downloadUrl() {
+            return this.$url(this.base_url, {filter: this.filter,});
+        },
+    },
+
+};
 
 
 </script>
