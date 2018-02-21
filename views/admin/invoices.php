@@ -64,7 +64,8 @@
 					<a :href="$url.route('admin/invoicemaker/invoice/edit', { id: invoice.id })">{{ invoice.invoice_number }}</a><br/>
 				</td>
 				<td>
-					{{ invoice.debtor.name }}
+					{{ invoice.debtor.name }}<br/>
+                    <small>{{ invoice.debtor.company }}</small>
 
                     <div class="uk-position-relative uk-float-right"
                          data-uk-dropdown="pos:'bottom-right', mode: 'hover', delay: 200">
