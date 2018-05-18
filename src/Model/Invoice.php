@@ -137,7 +137,11 @@ class Invoice implements \JsonSerializable {
 	}
 
 	public function getPdfFilename () {
-		return sprintf('%s - %s.pdf', $this->invoice_number, $this->getDebtor()->company ? : $this->getDebtor()->name);
+	    $search = ['\\', '/', ':', '*', '"', '<', '>', '|'];
+		return str_replace($search, '', sprintf('%s - %s.pdf',
+            $this->invoice_number,
+            $this->getDebtor()->company ? : $this->getDebtor()->name
+        ));
 	}
 
 	public function getAmountOpen () {
