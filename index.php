@@ -66,7 +66,7 @@ return [
 			'label' => 'Invoicemaker',
 			'icon' => 'packages/bixie/invoicemaker/icon.svg',
 			'url' => '@invoicemaker',
-			'access' => 'invoicemaker: manage invoices',
+			'access' => 'invoicemaker: view invoices',
 			'active' => '@invoicemaker(/*)'
 		],
 
@@ -74,7 +74,7 @@ return [
 			'label' => 'Invoices',
 			'parent' => 'invoicemaker',
 			'url' => '@invoicemaker',
-			'access' => 'invoicemaker: manage forms',
+			'access' => 'invoicemaker: view invoices',
 			'active' => '@invoicemaker(/invoice/edit)?'
 		],
 
@@ -96,6 +96,10 @@ return [
 
 		'invoicemaker: view invoices' => [
 			'title' => 'View invoices'
+		],
+
+		'invoicemaker: view own invoices' => [
+			'title' => 'View own invoices'
 		],
 
 		'invoicemaker: manage invoices' => [

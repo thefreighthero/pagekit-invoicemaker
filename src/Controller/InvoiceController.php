@@ -6,7 +6,7 @@ use Pagekit\Application as App;
 use Bixie\Invoicemaker\Model\Invoice;
 
 /**
- * @Access("invoicemaker: manage invoices", admin=true)
+ * @Access("invoicemaker: view invoices", admin=true)
  * @Route("invoice", name="invoice")
  */
 class InvoiceController {

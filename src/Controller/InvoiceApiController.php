@@ -19,7 +19,7 @@ class InvoiceApiController {
 	/**
 	 * @Route("/", methods="GET")
 	 * @Request({"filter": "array", "page":"int"})
-	 * @Access("invoicemaker: view invoices")
+	 * @Access("invoicemaker: view own invoices")
 	 */
 	public function indexAction ($filter = [], $page = 0) {
 		$query = Invoice::query()->select('*, amount - amount_paid AS amount_open');
@@ -28,7 +28,7 @@ class InvoiceApiController {
 		extract($filter, EXTR_SKIP);
 
 		$user = App::user();
-		if (!$user->hasAccess('invoicemaker: manage invoices')) {
+		if (!$user->hasAccess('invoicemaker: view invoices || invoicemaker: manage invoices')) {
 		    $user_id = $user->id;
         }
 
@@ -194,7 +194,7 @@ class InvoiceApiController {
 	/**
 	 * @Route("/pdf/{invoice_number}", name="pdf")
 	 * @Request({"invoice_number": "string", "key": "string", "inline": "bool"})
-	 * @Access("invoicemaker: view invoices")
+	 * @Access("invoicemaker: view own invoices")
 	 * @param integer $invoice_number Invoice bumber
 	 * @param string  $key            session key
 	 * @param bool    $inline

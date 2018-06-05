@@ -41,7 +41,7 @@ class InvoicemakerController {
 
     /**
      * @Route("/download", methods="GET")
-     * @Access("invoicemaker: view invoices")
+     * @Access("invoicemaker: view own invoices")
      * @Request({"filter": "array"})
      * @param array $filter
      * @return StreamedResponse
