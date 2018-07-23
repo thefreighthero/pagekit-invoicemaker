@@ -23,7 +23,10 @@ class InvoiceApiController {
 	 */
 	public function indexAction ($filter = [], $page = 0) {
 		$query = Invoice::query()->select('*, amount - amount_paid AS amount_open');
-		$filter = array_merge(array_fill_keys(['template', 'invoice_group', 'company_id', 'user_id', 'only', 'status', 'search', 'ext_key', 'order', 'limit'], ''), $filter);
+		$filter = array_merge(array_fill_keys([
+		    'template', 'invoice_group', 'company_id', 'user_id', 'only', 'status', 'exported',
+            'search', 'ext_key', 'order', 'limit',
+        ], ''), $filter);
 
 		extract($filter, EXTR_SKIP);
 
@@ -56,7 +59,11 @@ class InvoiceApiController {
 			$query->where('status = :status', compact('status'));
 		}
 
-		if (!empty($only_open)) {
+        if (!empty($exported)) {
+            $query->where(['exported' => $exported > 0]);
+        }
+
+        if (!empty($only_open)) {
 			$query->where('amount - amount_paid > 0');
 		}
 

@@ -70,6 +70,23 @@ $iframe_src = $app->url('@invoicemaker/api/invoice/html', [
                     </div>
                 </div>
 
+                <div class="uk-form-row uk-form-stacked">
+                    <div class="uk-form-controls">
+                        <p class="uk-form-controls-condensed">
+                            <label><input type="checkbox" v-model="invoice.exported" disabled/>
+                                {{ 'Exported' | trans }}
+                            </label>
+                            <a v-if="!invoice.exported"
+                               :title="$trans('Block for export')" data-uk-tooltip="delay:300"
+                               v-confirm="{title: $trans('Mark as exported manually?'), text: $trans('This will block the invoice for exporting to Twinfield.')}"
+                               @click="invoice.exported = true">
+                                <i class="uk-icon-ban uk-margin-small-left uk-text-danger"></i>
+                            </a>
+                        </p>
+                    </div>
+                </div>
+
+
                 <h3>{{ 'Payments' | trans }}</h3>
 
                 <invoice-payments :invoice.sync="invoice" :on-save="save"></invoice-payments>
@@ -180,7 +197,7 @@ $iframe_src = $app->url('@invoicemaker/api/invoice/html', [
 				</div>
 
 			</div>
-			
+
 		</div>
 
 	</form>

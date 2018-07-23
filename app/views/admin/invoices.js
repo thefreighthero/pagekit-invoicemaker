@@ -24,6 +24,7 @@ const vm = {
                     status: '',
                     only_open: 0,
                     template: '',
+                    exported: '',
                     invoice_group: '',
                     limit: 20,
                 }),
@@ -38,7 +39,9 @@ const vm = {
     },
 
     computed: {
-
+        boolOptions() {
+            return [{text: this.$trans('Yes'), value: 1,}, {text: this.$trans('No'), value: -1,},];
+        },
         templateOptions() {
 
             const options = this.templates.map(function (template) {

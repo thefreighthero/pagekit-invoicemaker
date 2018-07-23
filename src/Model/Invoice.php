@@ -81,7 +81,12 @@ class Invoice implements \JsonSerializable {
      * @var array
      */
     public $payments;
-	/**
+    /**
+     * @Column (type="boolean")
+     * @var bool
+     */
+    public $exported = false;
+    /**
 	 * @Column(type="string")
 	 * @var string
 	 */

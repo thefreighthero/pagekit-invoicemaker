@@ -17,6 +17,7 @@ return [
 				$table->addColumn('amount', 'decimal', ['precision' => 9, 'scale' => 2]);
 				$table->addColumn('amount_paid', 'decimal', ['precision' => 9, 'scale' => 2]);
                 $table->addColumn('payments', 'json_array', ['notnull' => false]);
+                $table->addColumn('exported', 'smallint', ['default' => 0]);
                 $table->addColumn('ext_key', 'string', ['length' => 255, 'notnull' => false]);
                 $table->addColumn('pdf_file', 'string', ['length' => 255, 'notnull' => false]);
 				$table->addColumn('user_id', 'string', ['unsigned' => true, 'notnull' => false]);
