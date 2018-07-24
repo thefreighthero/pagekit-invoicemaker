@@ -59,10 +59,12 @@ class InvoicemakerModule extends Module {
 	 */
 	public function getInvoiceGroup ($invoice_group) {
 		$this->getInvoiceGroups();
-		$groups = array_filter($this->invoice_groups, function ($invoiceGroup) use ($invoice_group) {
-		    return $invoiceGroup->name == $invoice_group;
-		});
-		return isset($groups[0]) ? $groups[0] : false;
+        foreach ($this->invoice_groups as $invoiceGroup) {
+            if ($invoiceGroup->name == $invoice_group) {
+                return $invoiceGroup;
+            }
+		}
+		return false;
 	}
 
 	/**
