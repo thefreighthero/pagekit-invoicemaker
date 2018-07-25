@@ -348,7 +348,10 @@ class InvoicemakerModule extends Module {
 	 * @return string
 	 */
 	public function getDownloadKey (Invoice $invoice) {
-		$session_key = $this->getSessionKey($invoice);
+        $session_key = $this->getSessionKey($invoice);
+        if (App::user()->isAdministrator()) {
+            return $session_key;
+        }
 		App::session()->set("_bixieInvoice.downloadkey.{$invoice->id}", $session_key);
 		return $session_key;
 	}
@@ -360,6 +363,9 @@ class InvoicemakerModule extends Module {
 	 */
 	public function checkDownloadKey (Invoice $invoice, $key) {
 		$check_key = $this->getSessionKey($invoice);
+		if (App::user()->isAdministrator()) {
+            return true;
+        }
 		if ($invoice->id > 0
 			and $check_key === $key
 			and $key === App::session()->get("_bixieInvoice.downloadkey.{$invoice->id}")) {
