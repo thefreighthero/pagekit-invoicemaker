@@ -1,5 +1,6 @@
 /*global Vue, _*/
 import InvoicePayments from '../../components/invoice-payments.vue';
+import InvoiceAccountingEntries from '../../components/invoice-accounting-entries.vue';
 
 // @vue/component
 const vm = {
@@ -10,6 +11,7 @@ const vm = {
 
     components: {
         'invoice-payments': InvoicePayments,
+        'invoice-accounting-entries': InvoiceAccountingEntries,
     },
 
     data: () => _.merge({
@@ -21,6 +23,7 @@ const vm = {
         },
         statuses: [],
         templates: [],
+        tfConfig: {},
         form: {},
     }, window.$data),
 
@@ -33,6 +36,9 @@ const vm = {
     created() {
         if (!_.isArray(this.invoice.payments)) {
             this.invoice.payments = [];
+        }
+        if (!_.isArray(this.invoice.data.ledger_data)) {
+            this.invoice.data = {...this.invoice.data, ...{ledger_data: [],},};
         }
         this.invoice.amount = Number(this.invoice.amount);
         this.invoice.amount_paid = Number(this.invoice.amount_paid);

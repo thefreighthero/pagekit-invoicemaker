@@ -29,6 +29,8 @@ class InvoiceController {
 			App::abort(404, __('Invoice not found'));
 		}
 
+		$twinfield = App::module('bixie/twinfield');
+
 		return [
 			'$view' => [
 				'title' => __('Invoice'),
@@ -37,6 +39,7 @@ class InvoiceController {
 			'$data' => [
 				'statuses' => Invoice::getStatuses(),
 				'templates' => App::module('bixie/invoicemaker')->getTemplates(),
+                'tfConfig' => $twinfield ? $twinfield->config() : [],
 				'invoice' => $invoice
 			],
 			'invoice' => $invoice

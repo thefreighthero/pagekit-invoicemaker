@@ -27,13 +27,13 @@ $iframe_src = $app->url('@invoicemaker/api/invoice/html', [
 			</div>
 		</div>
 
-		<div class="uk-grid pk-grid-large pk-width-sidebar-large" data-uk-grid-margin>
-			<div class="pk-width-content">
+		<div class="uk-grid" data-uk-grid-margin>
+			<div class="uk-width-large-2-3">
 
 				<iframe v-el:iframe src="<?=$iframe_src?>" frameborder="0" class="uk-responsive-width" width="800" height="1130"></iframe>
 
 			</div>
-			<div class="pk-width-sidebar">
+			<div class="uk-width-large-1-3">
 
 				<div class="uk-form-row">
 					<span class="uk-form-label">{{ 'PDF File' | trans }}</span>
@@ -69,6 +69,12 @@ $iframe_src = $app->url('@invoicemaker/api/invoice/html', [
                         <button type="button" class="uk-button" @click="credit">{{ 'Create credit invoice' | trans }}</button>
                     </div>
                 </div>
+
+                <h3>{{ 'Ledger data' | trans }}</h3>
+
+                <invoice-accounting-entries class="uk-margin" :entries.sync="invoice.data.ledger_data"
+                                            :ledger_numbers="tfConfig.ledger_numbers"
+                                            :vat_codes="tfConfig.vat_codes"></invoice-accounting-entries>
 
                 <div class="uk-form-row uk-form-stacked">
                     <div class="uk-form-controls">
