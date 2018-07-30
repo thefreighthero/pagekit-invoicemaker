@@ -195,6 +195,13 @@ class InvoicemakerModule extends Module {
 
         $invoice_lines = $invoice->getInvoiceLines();
 
+        //reverse ledger data
+        $ledger_data = $invoice->get('ledger_data', []);
+        foreach ($ledger_data as &$entry) {
+            $entry['debit_credit'] = $entry['debit_credit'] == 'credit' ? 'debit' : 'credit';
+        }
+        $invoice->set('ledger_data', $ledger_data);
+
         $credit_invoice =  $this->createInvoice(
             $invoice->getDebtor(),
             $invoice_lines,
