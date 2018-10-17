@@ -32,7 +32,16 @@ $iframe_src = $app->url('@invoicemaker/api/invoice/html', [
 
 				<iframe v-el:iframe src="<?=$iframe_src?>" frameborder="0" class="uk-responsive-width" width="800" height="1130"></iframe>
 
-			</div>
+                <div class="uk-form-row uk-margin">
+                    <label class="uk-form-label">{{ 'Internal notes' | trans }}</label>
+                    <div class="uk-form-controls">
+                        <textarea v-model="invoice.data.notes"
+                                  cols="30" rows="6"
+                                  class="uk-width-1-1"></textarea>
+                    </div>
+                </div>
+
+            </div>
 			<div class="uk-width-large-1-3">
 
 				<div class="uk-form-row">

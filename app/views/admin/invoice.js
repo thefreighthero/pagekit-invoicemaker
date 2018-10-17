@@ -19,7 +19,9 @@ const vm = {
             debtor: {},
             invoice_lines: [],
             payments: [],
-            data: {},
+            data: {
+                notes: '',
+            },
         },
         statuses: [],
         templates: [],

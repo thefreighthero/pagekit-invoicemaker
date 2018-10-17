@@ -143,7 +143,7 @@ class InvoicemakerModule extends Module {
 			'template' => $template->name,
 			'invoice_number' => $this->getInvoiceNumber($invoiceGroup, $data),
 			'invoice_group' => $invoiceGroup->name,
-			'data' => array_diff_key($data, array_flip(['amount', 'ext_key']))
+			'data' => array_merge(['notes' => '',], array_diff_key($data, array_flip(['amount', 'ext_key']))),
 		]);
 
 		try {
@@ -213,7 +213,7 @@ class InvoicemakerModule extends Module {
                 'user_id' => $invoice->user_id,
                 'amount' => $invoice->amount * -1,
                 'amount_paid' => $invoice->amount * -1,
-            ], $invoice->data)
+            ], $invoice->data, ['notes' => '',])
         );
 
         $invoice->amount_paid = $invoice->amount;
