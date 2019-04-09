@@ -17,5 +17,6 @@ class InvoiceLine implements \JsonSerializable {
 	public $units;
 	public $per_unit;
 	public $amount;
+	public $data = [];
 
 }
