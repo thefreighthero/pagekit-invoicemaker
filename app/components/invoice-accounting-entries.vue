@@ -10,15 +10,14 @@
                     <div class="uk-flex-item-1"><h4 class="uk-margin-remove">{{ 'Credit' | trans }}</h4></div>
                     <div>
                         <strong :class="{'uk-text-danger': !isBalanced}">
-                            {{ balanceAmounts.rounded.credit | currency '€ '}}
+                            {{ balanceAmounts.rounded.credit | currency '€ ' }}
                         </strong>
                     </div>
                 </div>
 
                 <ul class="uk-nestable uk-margin-remove" v-show="creditEntries.length">
                     <datafield v-for="datafield in creditEntries"
-                               :datafield="datafield"
-                               @check:balance="checkBalance"></datafield>
+                               :datafield="datafield"></datafield>
                 </ul>
 
                 <button type="button" class="uk-button uk-button-small uk-margin"
