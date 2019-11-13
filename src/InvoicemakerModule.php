@@ -200,7 +200,7 @@ class InvoicemakerModule extends Module {
         foreach ($ledger_data as &$entry) {
             $entry['debit_credit'] = $entry['debit_credit'] == 'credit' ? 'debit' : 'credit';
         }
-        $invoice->set('ledger_data', $ledger_data);
+//        $invoice->set('ledger_data', $ledger_data);
 
         $credit_invoice =  $this->createInvoice(
             $invoice->getDebtor(),
@@ -213,6 +213,7 @@ class InvoicemakerModule extends Module {
                 'user_id' => $invoice->user_id,
                 'amount' => $invoice->amount * -1,
                 'amount_paid' => $invoice->amount * -1,
+                'ledger_data' => $ledger_data,
             ], $invoice->data, ['notes' => '',])
         );
 
