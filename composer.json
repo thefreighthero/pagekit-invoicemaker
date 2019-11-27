@@ -2,7 +2,7 @@
   "name": "bixie/invoicemaker",
   "module": "bixie/invoicemaker",
   "type": "pagekit-extension",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "title": "Bixie Invoicemaker",
   "description": "Create invoices in PDF.",
   "license": "MIT",
@@ -18,6 +18,6 @@
     "scripts": "scripts.php"
   },
   "require": {
-    "dompdf/dompdf": "~0.8.2"
+    "dompdf/dompdf": "~0.8.3"
   }
 }
