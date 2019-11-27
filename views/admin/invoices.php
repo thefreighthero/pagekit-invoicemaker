@@ -64,7 +64,7 @@
                     <label class="uk-text-small" :title="$trans('Show only invoices with an amount open')"
                            data-uk-tooltip="delay: 200">
                         <input type="checkbox" class="uk-margin-small-right"
-                               v-model="config.filter.only_open" :true-value="1" :false-value="0" number/>&gt; 0</label>
+                               v-model="config.filter.only_open" :true-value="1" :false-value="0" number/>!= 0</label>
                 </th>
                 <th>{{ 'PDF' | trans }}</th>
             </tr>

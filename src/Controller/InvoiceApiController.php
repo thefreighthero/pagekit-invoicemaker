@@ -64,7 +64,7 @@ class InvoiceApiController {
         }
 
         if (!empty($only_open)) {
-			$query->where('amount - amount_paid > 0');
+			$query->where('amount - amount_paid <> 0');
 		}
 
         if ($search) {
