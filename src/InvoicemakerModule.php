@@ -200,7 +200,6 @@ class InvoicemakerModule extends Module {
         foreach ($ledger_data as &$entry) {
             $entry['debit_credit'] = $entry['debit_credit'] == 'credit' ? 'debit' : 'credit';
         }
-//        $invoice->set('ledger_data', $ledger_data);
 
         $credit_invoice =  $this->createInvoice(
             $invoice->getDebtor(),
@@ -217,13 +216,24 @@ class InvoicemakerModule extends Module {
             ], $invoice->data, ['notes' => '',])
         );
 
-        $invoice->amount_paid = $invoice->amount;
-        $invoice->payments = [[
-            'amount' => $invoice->amount,
-            'date' => (new \DateTime())->format(\DATE_ATOM),
-            'via' => __('Credit invoice'),
-            'transaction_id' => $credit_invoice->invoice_number,
-        ]];
+        //transfer existing payments
+        $amount_open = $invoice->getAmountOpen();
+        if ($amount_open) {
+            //transfer open amount to credit invoice
+            $this->addPayment($invoice, [
+                'amount' => $amount_open,
+                'via' => __('Credit invoice'),
+                'transaction_id' => $credit_invoice->invoice_number,
+                'from_credit_invoice' => true,
+            ]);
+            $this->addPayment($credit_invoice, [
+                'amount' => $amount_open * -1,
+                'via' => __('Credit invoice'),
+                'transaction_id' => $invoice->invoice_number,
+                'from_credit_invoice' => true,
+            ]);
+            $credit_invoice->save();
+        }
         $invoice->set('credited_by', $credit_invoice->invoice_number);
         $invoice->save(['status' => Invoice::STATUS_CREDITED]);
 
@@ -252,6 +262,7 @@ class InvoicemakerModule extends Module {
                 'date' => (new \DateTime())->format(DATE_ATOM),
                 'via' => '',
                 'transaction_id' => '',
+                'from_credit_invoice' => false,
             ], $payment);
         }
         $invoice->amount_paid = array_reduce($invoice->payments, function ($total, $pymnt) {
