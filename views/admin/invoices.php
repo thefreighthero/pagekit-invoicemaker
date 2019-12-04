@@ -144,8 +144,8 @@
                 <td colspan="6"></td>
                 <td class="uk-text-right"><strong>{{ total_amount | currency '€ ' }}</strong></td>
                 <td></td>
-                <td class="uk-text-right"><strong>{{ total_open | currency '€ ' }}</strong></td>
                 <td></td>
+                <td class="uk-text-right"><strong>{{ total_open | currency '€ ' }}</strong></td>
             </tr>
             </tfoot>
         </table>

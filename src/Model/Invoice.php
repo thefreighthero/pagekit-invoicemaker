@@ -80,7 +80,12 @@ class Invoice implements \JsonSerializable {
      * @Column(type="json_array")
      * @var array
      */
-    public $payments;
+    public $payments = [];
+    /**
+     * @Column(type="datetime")
+     * @var \DateTime
+     */
+    public $paid_at;
     /**
      * @Column (type="boolean")
      * @var bool
@@ -171,6 +176,4 @@ class Invoice implements \JsonSerializable {
 			'key' => App::module('bixie/invoicemaker')->getDownloadKey($this),
 			'inline' => $inline]);
 	}
-
-
 }

@@ -9,6 +9,21 @@ trait InvoiceModelTrait {
 
 	use ModelTrait;
 
+    /**
+     * @Saving
+     * @param $event
+     * @param Invoice $invoice
+     * @throws \Exception
+     */
+    public static function saving($event, Invoice $invoice) {
+        if (!$invoice->paid_at && $invoice->amount !== 0 && $invoice->amount == $invoice->amount_paid) {
+            $invoice->paid_at = new \DateTime();
+        }
+        if ($invoice->paid_at && $invoice->amount !== 0 && $invoice->amount != $invoice->amount_paid) {
+            $invoice->paid_at = null;
+        }
+    }
+
 	/**
 	 * @param $invoice_number
 	 * @return Invoice|bool

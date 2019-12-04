@@ -124,12 +124,20 @@ $iframe_src = $app->url('@invoicemaker/api/invoice/html', [
                         <span>{{ invoice.amount_paid | currency '€ ' }}</span>
                     </div>
                 </div>
-                <div class="uk-grid uk-grid-small uk-margin-small-top" data-uk-grid-margin>
+                <div v-if="invoice.amount_open" class="uk-grid uk-grid-small uk-margin-small-top" data-uk-grid-margin>
                     <div class="uk-width-2-3">
                         <p>Open amount</p>
                     </div>
                     <div class="uk-width-1-3 uk-text-right">
-                        <strong>{{ (invoice.amount - invoice.amount_paid) | currency '€ ' }}</strong>
+                        <strong>{{ invoice.amount_open | currency '€ ' }}</strong>
+                    </div>
+                </div>
+                <div v-else class="uk-grid uk-grid-small uk-margin-small-top" data-uk-grid-margin>
+                    <div class="uk-width-2-3">
+                        <p>Paid at</p>
+                    </div>
+                    <div class="uk-width-1-3 uk-text-right">
+                        <strong>{{ (invoice.paid_at) | date }}</strong>
                     </div>
                 </div>
 
