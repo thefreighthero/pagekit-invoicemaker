@@ -17,7 +17,7 @@ trait InvoiceModelTrait {
      */
     public static function saving($event, Invoice $invoice) {
         if (!$invoice->paid_at && $invoice->amount !== 0 && $invoice->amount == $invoice->amount_paid) {
-            $invoice->paid_at = new \DateTime();
+            $invoice->paid_at = new \DateTime(); //todo should this be the date of payment?
         }
         if ($invoice->paid_at && $invoice->amount !== 0 && $invoice->amount != $invoice->amount_paid) {
             $invoice->paid_at = null;
