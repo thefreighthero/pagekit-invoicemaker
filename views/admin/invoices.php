@@ -133,7 +133,7 @@
                 <td>
                     <a :href="invoice.pdf_url" :title="invoice.pdf_filename" data-uk-tooltip="" download>
                         <i class="uk-icon-download uk-margin-small-right"></i></a>
-                    <a :href="$url(invoice.pdf_url, {inline: 1})" class="uk-margin-small-right"
+                    <a :href="$url(invoice.pdf_url, {inline: 1, v: Date.now(),})" class="uk-margin-small-right"
                        :title="invoice.pdf_filename" data-uk-tooltip="" data-uk-lightbox="" data-lightbox-type="iframe">
                         <i class="uk-icon-search uk-margin-small-right"></i></a>
                 </td>
