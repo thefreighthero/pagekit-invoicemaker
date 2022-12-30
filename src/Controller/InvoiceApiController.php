@@ -2,6 +2,7 @@
 
 namespace Bixie\Invoicemaker\Controller;
 
+use Bixie\Freighthero\Model\Shipment;
 use Pagekit\Application as App;
 use Pagekit\Application\Exception;
 use Bixie\Invoicemaker\InvoicemakerModule;
@@ -100,8 +101,22 @@ class InvoiceApiController {
 			$invoice = Invoice::create();
 			unset($data['id']);
 		}
-
 		try {
+
+            if(strlen($data['shipment_id']) > 0) {
+
+                $shipment_id = $data['shipment_id'];
+                unset($data['shipment_id']);
+
+                $shipment = Shipment::find($shipment_id);
+                if(!empty($shipment)) {
+
+                    $data['ext_key'] = 'tfh.shipment.' . $shipment_id;
+                }
+
+
+            }
+
 
 			$invoice->save($data);
 

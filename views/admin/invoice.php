@@ -212,12 +212,19 @@ $iframe_src = $app->url('@invoicemaker/api/invoice/html', [
 						<input id="invoice-debtor-debtor_vat" name="debtor_vat" class="uk-width-1-1" v-model="invoice.debtor.debtor_vat"/>
 					</div>
 				</div>
-				<div class="uk-form-row">
-					<label for="invoice-debtor-debtor_coc" class="uk-form-label">{{ 'COC number' | trans }}</label>
-					<div class="uk-form-controls">
-						<input id="invoice-debtor-debtor_coc" name="debtor_coc" class="uk-width-1-1" v-model="invoice.debtor.debtor_coc"/>
-					</div>
-				</div>
+                <div class="uk-form-row">
+                    <label for="invoice-debtor-debtor_coc" class="uk-form-label">{{ 'COC number' | trans }}</label>
+                    <div class="uk-form-controls">
+                        <input id="invoice-debtor-debtor_coc" name="debtor_coc" class="uk-width-1-1" v-model="invoice.debtor.debtor_coc"/>
+                    </div>
+                </div>
+                <h3>{{ 'Externe key overschrijven' | trans }}</h3>
+                <div class="uk-form-row">
+                    <label for="invoice-shipment_id" class="uk-form-label">{{ 'Shipment ID' | trans }}</label>
+                    <div class="uk-form-controls">
+                        <input id="invoice-shipment_id" name="shipment_id" class="uk-width-1-1" v-model="invoice.shipment_id"/>
+                    </div>
+                </div>
 
 			</div>
 
