@@ -103,7 +103,7 @@ class InvoiceApiController {
 		}
 		try {
 
-            if(strlen($data['shipment_id']) > 0) {
+            if(isset($data['shipment_id']) && strlen($data['shipment_id']) > 0) {
 
                 $shipment_id = $data['shipment_id'];
                 unset($data['shipment_id']);
