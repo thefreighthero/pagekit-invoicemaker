@@ -86,7 +86,13 @@ const vm = {
                 this.$notify(this.$trans('Credit invoice %invoice_number% created.', {
                     'invoice_number': res.data.credit_invoice.invoice_number,
                 }), 'success');
+
+                console.log(this.$url.route('admin/invoicemaker/invoice/edit', {id: res.data.credit_invoice.id,}));
+                window.location = this.$url.route('admin/invoicemaker/invoice/edit', {id: res.data.credit_invoice.id,});
+
             }, res => this.$notify(res.data.message || res.data, 'danger'));
+
+
         },
 
         getStatusText(status) {

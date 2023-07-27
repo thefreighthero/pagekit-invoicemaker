@@ -168,6 +168,9 @@ msgstr ""
 msgid "Created"
 msgstr ""
 
+msgid "Exported"
+msgstr ""
+
 msgid "Download"
 msgstr ""
 

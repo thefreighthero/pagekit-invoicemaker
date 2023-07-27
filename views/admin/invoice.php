@@ -14,7 +14,10 @@ $iframe_src = $app->url('@invoicemaker/api/invoice/html', [
 
 				<h2 class="uk-margin-remove">{{ 'Edit invoice' | trans }} <em>{{ invoice.invoice_number }}</em></h2>
 				<em>{{ 'External key' | trans }}:</em> <span>{{ invoice.ext_key }}</span><br/>
-				<em>{{ 'Status' | trans }}:</em> <span>{{ getStatusText(invoice.status) }}</span>
+				<em>{{ 'Status' | trans }}:</em> <span>{{ getStatusText(invoice.status) }}</span><br/>
+                <span v-if="invoice.data.credit_for">
+                    <em>{{ 'Credit for' | trans }}: </em> <a :href="$url.route('admin/invoicemaker/invoice/edit', { id: invoice.data.credit_for_id })" target="_blank"> <i class="uk-icon-external-link uk-margin-small-right"></i>{{ invoice.data.credit_for }}</a>
+                </span>
 
 			</div>
 			<div data-uk-margin>
@@ -75,7 +78,7 @@ $iframe_src = $app->url('@invoicemaker/api/invoice/html', [
                 <div v-if="invoice.status === 'INITIAL'" class="uk-form-row">
                     <span class="uk-form-label">{{ 'Credit invoice' | trans }}</span>
                     <div class="uk-form-controls uk-text-right">
-                        <button type="button" class="uk-button" @click="credit">{{ 'Create credit invoice' | trans }}</button>
+                        <button type="button" class="uk-button" @click="credit">{{ 'Duplicate to credit invoice' | trans }}</button>
                     </div>
                 </div>
 
@@ -212,19 +215,12 @@ $iframe_src = $app->url('@invoicemaker/api/invoice/html', [
 						<input id="invoice-debtor-debtor_vat" name="debtor_vat" class="uk-width-1-1" v-model="invoice.debtor.debtor_vat"/>
 					</div>
 				</div>
-                <div class="uk-form-row">
-                    <label for="invoice-debtor-debtor_coc" class="uk-form-label">{{ 'COC number' | trans }}</label>
-                    <div class="uk-form-controls">
-                        <input id="invoice-debtor-debtor_coc" name="debtor_coc" class="uk-width-1-1" v-model="invoice.debtor.debtor_coc"/>
-                    </div>
-                </div>
-                <h3>{{ 'Externe key overschrijven' | trans }}</h3>
-                <div class="uk-form-row">
-                    <label for="invoice-shipment_id" class="uk-form-label">{{ 'Shipment ID' | trans }}</label>
-                    <div class="uk-form-controls">
-                        <input id="invoice-shipment_id" name="shipment_id" class="uk-width-1-1" v-model="invoice.shipment_id"/>
-                    </div>
-                </div>
+				<div class="uk-form-row">
+					<label for="invoice-debtor-debtor_coc" class="uk-form-label">{{ 'COC number' | trans }}</label>
+					<div class="uk-form-controls">
+						<input id="invoice-debtor-debtor_coc" name="debtor_coc" class="uk-width-1-1" v-model="invoice.debtor.debtor_coc"/>
+					</div>
+				</div>
 
 			</div>
 

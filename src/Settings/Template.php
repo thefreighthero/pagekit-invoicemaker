@@ -76,7 +76,8 @@ class Template implements \JsonSerializable {
 		return App::view($template_path . '/invoice.php', [
 		    'invoice' => $invoice,
             'template' => $this,
-            'isCredit' => $invoice->status == Invoice::STATUS_CREDIT
+//            'isCredit' => $invoice->status == Invoice::STATUS_CREDIT
+            'isCredit' => (int)$invoice->amount > 0 ? false : true,
         ]);
 
 	}

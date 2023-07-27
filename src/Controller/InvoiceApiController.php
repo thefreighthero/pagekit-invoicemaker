@@ -2,7 +2,6 @@
 
 namespace Bixie\Invoicemaker\Controller;
 
-use Bixie\Freighthero\Model\Shipment;
 use Pagekit\Application as App;
 use Pagekit\Application\Exception;
 use Bixie\Invoicemaker\InvoicemakerModule;
@@ -101,22 +100,8 @@ class InvoiceApiController {
 			$invoice = Invoice::create();
 			unset($data['id']);
 		}
+
 		try {
-
-            if(isset($data['shipment_id']) && strlen($data['shipment_id']) > 0) {
-
-                $shipment_id = $data['shipment_id'];
-                unset($data['shipment_id']);
-
-                $shipment = Shipment::find($shipment_id);
-                if(!empty($shipment)) {
-
-                    $data['ext_key'] = 'tfh.shipment.' . $shipment_id;
-                }
-
-
-            }
-
 
 			$invoice->save($data);
 
@@ -278,6 +263,21 @@ class InvoiceApiController {
 		if (!$invoicemaker->checkDownloadKey($invoice, $key)) {
 			App::abort(400, __('Key not valid.'));
 		}
+
+//        try {
+//
+//            if ($invoicemaker->renderPdfFile($invoice)) {
+//
+//                $invoice->save([
+//                    'pdf_file' => $invoice->getPdfFilename()
+//                ]);
+//
+//
+//            }
+//
+//        } catch (\Exception $e) {
+//            App::abort(500, __('Error in creating PDF file'));
+//        }
 
 		$filename = $invoice->getPdfFilename();
 

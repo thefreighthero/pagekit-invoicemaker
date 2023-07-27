@@ -19,7 +19,7 @@ use Bixie\PkFramework\Helpers\DateHelper;
 
 <div id="creditor"><?= $template->markdown('creditor_address') ?></div>
 
-<h1><?= $isCredit ? $template->credit_title : $template->title ?></h1>
+<h1><?= $template->title ?></h1>
 
 <strong><?= __('To:') ?></strong><br/>
 <?php if ($invoice->getDebtor()->company) : ?><div><?= $invoice->getDebtor()->company ?></div><?php endif; ?>

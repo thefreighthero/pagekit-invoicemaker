@@ -148,7 +148,8 @@ class InvoicemakerModule extends Module {
 
 		try {
 
-			$invoice->save(['status' => ($invoice->amount < 0 ? Invoice::STATUS_CREDIT : Invoice::STATUS_INITIAL)]);
+//            $invoice->save(['status' => ($invoice->amount < 0 ? Invoice::STATUS_CREDIT : Invoice::STATUS_INITIAL)]);
+            $invoice->save(['status' => Invoice::STATUS_INITIAL]);
 
 		} catch (\Exception $e) {
 			if ($e instanceof UniqueConstraintViolationException) {
@@ -183,15 +184,15 @@ class InvoicemakerModule extends Module {
         if (!$invoice = Invoice::byInvoiceNumber($invoice_number)) {
             throw new InvoicemakerException(__('Invoice %invoice_number% not found!', ['%invoice_number%' => $invoice_number]));
         }
-        if ($invoice->status == Invoice::STATUS_CREDITED) {
-            throw new InvoicemakerException(__('Invoice %invoice_number% already has been credited by invoice %credit_invoice_number%!', [
-                '%invoice_number%' => $invoice_number,
-                '%credit_invoice_number%' => $invoice->get('credited_by')
-            ]));
-        }
-        if ($invoice->amount < -1) {
-            throw new InvoicemakerException(__('Invoice %invoice_number% already is a credit invoice!', ['%invoice_number%' => $invoice_number]));
-        }
+//        if ($invoice->status == Invoice::STATUS_CREDITED) {
+//            throw new InvoicemakerException(__('Invoice %invoice_number% already has been credited by invoice %credit_invoice_number%!', [
+//                '%invoice_number%' => $invoice_number,
+//                '%credit_invoice_number%' => $invoice->get('credited_by')
+//            ]));
+//        }
+//        if ($invoice->amount < -1) {
+//            throw new InvoicemakerException(__('Invoice %invoice_number% already is a credit invoice!', ['%invoice_number%' => $invoice_number]));
+//        }
 
         $invoice_lines = $invoice->getInvoiceLines();
 
@@ -206,14 +207,19 @@ class InvoicemakerModule extends Module {
             $invoice_lines,
             $invoice->template,
             $invoice->invoice_group,
-            array_merge([
-                'credit_for' => $invoice->invoice_number,
-                'ext_key' => $invoice->ext_key,
-                'user_id' => $invoice->user_id,
-                'amount' => $invoice->amount * -1,
-                'amount_paid' => $invoice->amount * -1,
-                'ledger_data' => $ledger_data,
-            ], $invoice->data, ['notes' => '',])
+            array_merge(
+                $invoice->data,
+                [
+                    'credit_for_id' => $invoice->id,
+                    'credit_for' => $invoice->invoice_number,
+                    'ext_key' => $invoice->ext_key,
+                    'user_id' => $invoice->user_id,
+                    'amount' => $invoice->amount * -1,
+                    'amount_paid' => $invoice->amount * -1,
+                    'ledger_data' => $ledger_data,
+                    'notes' => '',
+                ]
+            )
         );
 
         //transfer existing payments
@@ -235,7 +241,8 @@ class InvoicemakerModule extends Module {
             $credit_invoice->save();
         }
         $invoice->set('credited_by', $credit_invoice->invoice_number);
-        $invoice->save(['status' => Invoice::STATUS_CREDITED]);
+        //$invoice->save(['status' => Invoice::STATUS_CREDITED]);
+        $invoice->save();
 
         return $credit_invoice;
     }
