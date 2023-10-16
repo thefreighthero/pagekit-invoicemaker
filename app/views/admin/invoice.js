@@ -58,8 +58,9 @@ const vm = {
         save() {
 
             if(this.invoice.exported == true) {
-                this.$notify(this.$trans('Invoice %invoice_number% cannot be saved. The invoice is already exported.', {invoice_number: this.invoice.invoice_number,}), 'danger');
-                return false;
+                this.$notify(this.$trans('Invoice %invoice_number% is already exported. Be careful what you change.', {invoice_number: this.invoice.invoice_number,}), 'danger');
+                // this.$notify(this.$trans('Invoice %invoice_number% cannot be saved. The invoice is already exported.', {invoice_number: this.invoice.invoice_number,}), 'danger');
+                // return false;
             }
             this.Invoices.save({id: this.invoice.id,}, {invoice: this.invoice,}).then(res => {
                 const data = res.data;
