@@ -68,6 +68,8 @@ class InvoiceApiController {
 			$query->where('amount - amount_paid <> 0');
 		}
 
+        $query->where('deleted_at IS NULL');
+
         if ($search) {
             $query->where(function ($query) use ($search) {
                 $query->orWhere(['invoice_number LIKE :search', 'ext_key LIKE :search', 'debtor LIKE :search'], ['search' => "%{$search}%"]);
@@ -135,7 +137,11 @@ class InvoiceApiController {
 	public function deleteAction ($id) {
 		if ($invoice = Invoice::find($id)) {
 
-			$invoice->delete();
+            if($invoice->exported === true) {
+                return ['message' => 'error'];
+            }
+            $invoice->delete();
+
 		}
 
 		return ['message' => 'success'];
@@ -148,7 +154,8 @@ class InvoiceApiController {
 	 */
 	public function bulkDeleteAction ($ids = []) {
 		foreach (array_filter($ids) as $id) {
-			$this->deleteAction($id);
+			$result = $this->deleteAction($id);
+            if($result['message'] == 'error') return $result;
 		}
 
 		return ['message' => 'success'];

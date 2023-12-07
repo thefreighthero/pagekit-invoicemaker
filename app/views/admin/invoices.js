@@ -138,9 +138,14 @@ const vm = {
         },
 
         removeInvoices() {
-            this.Invoices.delete({id: 'bulk',}, {ids: this.selected,}).then(() => {
+            this.Invoices.delete({id: 'bulk',}, {ids: this.selected,}).then((request) => {
                 this.load();
-                this.$notify('Invoices(s) deleted.');
+                if(request.data.message == 'error') {
+                    this.$notify('Er is een fout opgetreden.');
+                } else {
+                    this.$notify('Invoices(s) deleted.');
+                }
+
             });
         },
 

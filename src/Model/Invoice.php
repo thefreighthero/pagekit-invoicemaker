@@ -7,6 +7,7 @@ use Bixie\Invoicemaker\Invoice\Debtor;
 use Bixie\Invoicemaker\Invoice\InvoiceLineCollection;
 use Pagekit\Application as App;
 use Pagekit\System\Model\DataModelTrait;
+use Bixie\Invoicemaker\Model\SoftDeleteTrait;
 
 /**
  * @Entity(tableClass="@invoicemaker_invoice",eventPrefix="invoicemaker_invoice")
@@ -106,6 +107,13 @@ class Invoice implements \JsonSerializable {
 	 * @var InvoiceLineCollection
 	 */
 	public $invoice_lines;
+
+    /**
+     * @Column(type="datetime")
+     * @var \DateTime
+     */
+    public $deleted_at;
+
 
 	/** @var array */
 	protected static $properties = [

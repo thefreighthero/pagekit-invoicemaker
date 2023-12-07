@@ -2,12 +2,16 @@
 
 namespace Bixie\Invoicemaker\Model;
 
+use Bixie\Invoicemaker\Model\SoftDeleteTrait;
 use Pagekit\Application as App;
 use Pagekit\Database\ORM\ModelTrait;
 
 trait InvoiceModelTrait {
 
-	use ModelTrait;
+	use SoftDeleteTrait, ModelTrait {
+        SoftDeleteTrait::delete insteadof ModelTrait; // Use delete from SoftDeleteTrait
+        SoftDeleteTrait::query insteadof ModelTrait; // Use query from SoftDeleteTrait
+    }
 
     /**
      * @Saving

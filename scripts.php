@@ -18,6 +18,7 @@ return [
 				$table->addColumn('amount_paid', 'decimal', ['precision' => 9, 'scale' => 2]);
                 $table->addColumn('payments', 'json_array', ['notnull' => false]);
                 $table->addColumn('paid_at', 'datetime', ['notnull' => false]);
+                $table->addColumn('deleted_at', 'datetime', ['notnull' => false]);
                 $table->addColumn('exported_at', 'datetime', ['notnull' => false]);
                 $table->addColumn('exported', 'smallint', ['default' => 0]);
                 $table->addColumn('ext_key', 'string', ['length' => 255, 'notnull' => false]);
