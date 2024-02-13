@@ -2,6 +2,9 @@
 
 namespace Bixie\Invoicemaker\Controller;
 
+use Bixie\Freighthero\Calculator\CalculatorException;
+use Bixie\Freighthero\Helpers\CalculatorHelper;
+use Bixie\Freighthero\Model\CalculatorData;
 use Pagekit\Application as App;
 use Pagekit\Application\Exception;
 use Bixie\Invoicemaker\InvoicemakerModule;
@@ -105,6 +108,8 @@ class InvoiceApiController {
 		}
 
 		try {
+            // Check if owning shipment has changed.
+            $invoiceOwnerChanged = false;
 
             if(isset($data['shipment_id']) && strlen($data['shipment_id']) > 0) {
 
@@ -112,15 +117,33 @@ class InvoiceApiController {
                 unset($data['shipment_id']);
 
                 $shipment = Shipment::find($shipment_id);
-                if(!empty($shipment)) {
 
+                if(!empty($shipment) && strpos($data['ext_key'], 'tfh.shipment.') === false) {
                     $data['ext_key'] = 'tfh.shipment.' . $shipment_id;
+                    $invoiceOwnerChanged = true;
                 }
-
 
             }
 
 			$invoice->save($data);
+
+            // Recalculate margin
+            if($invoiceOwnerChanged) {
+
+                // This does not do what we want.
+//                try {
+//
+//                    //get invoiced status of calculation
+//                    $invoiceCalcs = CalculatorHelper::calculateShipment($shipment, CalculatorData::TYPE_INVOICE);
+//                    //get invoiced status of calculation
+//                    $estimateCalcs = CalculatorHelper::calculateShipment($shipment, CalculatorData::TYPE_ESTIMATE);
+//
+//                } catch (CalculatorException $e) {
+//                    App::message()->error($e->getMessage());
+//                }
+
+
+            }
 
 		} catch (Exception $e) {
 			App::abort(400, $e->getMessage());

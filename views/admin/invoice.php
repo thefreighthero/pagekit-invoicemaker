@@ -224,11 +224,15 @@ $iframe_src = $app->url('@invoicemaker/api/invoice/html', [
 					</div>
 				</div>
 
-                <h3>{{ 'Externe key overschrijven' | trans }}</h3>
                 <div class="uk-form-row">
-                    <label for="invoice-shipment_id" class="uk-form-label">{{ 'Shipment ID' | trans }}</label>
-                    <div class="uk-form-controls">
-                        <input id="invoice-shipment_id" name="shipment_id" class="uk-width-1-1" v-model="invoice.shipment_id"/>
+                    <div v-if="invoice.ext_key && !invoice.ext_key.includes('tfh.shipment')">
+                        <h3>{{ 'Externe key overschrijven' | trans }}</h3>
+                        <div class="uk-form-row">
+                            <label for="invoice-shipment_id" class="uk-form-label">{{ 'Shipment ID' | trans }}</label>
+                            <div class="uk-form-controls">
+                                <input id="invoice-shipment_id" name="shipment_id" class="uk-width-1-1" v-model="invoice.shipment_id"/>
+                            </div>
+                        </div>
                     </div>
                 </div>
 			</div>
