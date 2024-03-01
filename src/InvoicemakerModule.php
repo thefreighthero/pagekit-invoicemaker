@@ -148,7 +148,6 @@ class InvoicemakerModule extends Module {
 
 		try {
 
-//            $invoice->save(['status' => ($invoice->amount < 0 ? Invoice::STATUS_CREDIT : Invoice::STATUS_INITIAL)]);
             $invoice->save(['status' => Invoice::STATUS_INITIAL]);
 
 		} catch (\Exception $e) {
@@ -161,11 +160,9 @@ class InvoicemakerModule extends Module {
 		try {
 
 			if ($this->renderPdfFile($invoice)) {
-
 				$invoice->save([
 					'pdf_file' => $invoice->getPdfFilename()
 				]);
-
 			}
 
 		} catch (\Exception $e) {
@@ -184,15 +181,6 @@ class InvoicemakerModule extends Module {
         if (!$invoice = Invoice::byInvoiceNumber($invoice_number)) {
             throw new InvoicemakerException(__('Invoice %invoice_number% not found!', ['%invoice_number%' => $invoice_number]));
         }
-//        if ($invoice->status == Invoice::STATUS_CREDITED) {
-//            throw new InvoicemakerException(__('Invoice %invoice_number% already has been credited by invoice %credit_invoice_number%!', [
-//                '%invoice_number%' => $invoice_number,
-//                '%credit_invoice_number%' => $invoice->get('credited_by')
-//            ]));
-//        }
-//        if ($invoice->amount < -1) {
-//            throw new InvoicemakerException(__('Invoice %invoice_number% already is a credit invoice!', ['%invoice_number%' => $invoice_number]));
-//        }
 
         $invoice_lines = $invoice->getInvoiceLines();
 

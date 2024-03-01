@@ -127,24 +127,6 @@ class InvoiceApiController {
 
 			$invoice->save($data);
 
-            // Recalculate margin
-            if($invoiceOwnerChanged) {
-
-                // This does not do what we want.
-//                try {
-//
-//                    //get invoiced status of calculation
-//                    $invoiceCalcs = CalculatorHelper::calculateShipment($shipment, CalculatorData::TYPE_INVOICE);
-//                    //get invoiced status of calculation
-//                    $estimateCalcs = CalculatorHelper::calculateShipment($shipment, CalculatorData::TYPE_ESTIMATE);
-//
-//                } catch (CalculatorException $e) {
-//                    App::message()->error($e->getMessage());
-//                }
-
-
-            }
-
 		} catch (Exception $e) {
 			App::abort(400, $e->getMessage());
 		}
