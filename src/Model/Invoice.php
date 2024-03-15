@@ -92,6 +92,12 @@ class Invoice implements \JsonSerializable {
      * @var bool
      */
     public $exported = false;
+
+    /**
+     * @Column(type="datetime")
+     * @var \DateTime
+     */
+    public $exported_at;
     /**
 	 * @Column(type="string")
 	 * @var string
