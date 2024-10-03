@@ -87,7 +87,7 @@ $iframe_src = $app->url('@invoicemaker/api/invoice/html', [
                 <div class="uk-alert uk-alert-danger" v-if="invoice.exported">
                     {{ 'Factuur is reeds geexporteerd. Je mag geen bedragen meer aanpassen.' | trans }}</div>
                 <invoice-accounting-entries class="uk-margin" :entries.sync="invoice.data.ledger_data"
-                                            :ledger_numbers="tfConfig.ledger_numbers"
+                                            :ledger_numbers="ledger_numbers"
                                             :vat_codes="tfConfig.vat_codes"></invoice-accounting-entries>
 
                 <div class="uk-form-row uk-form-stacked">

@@ -25,6 +25,7 @@ const vm = {
         },
         statuses: [],
         templates: [],
+        ledger_numbers: [],
         tfConfig: {},
         form: {},
     }, window.$data),

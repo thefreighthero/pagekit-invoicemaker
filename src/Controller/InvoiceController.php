@@ -2,8 +2,9 @@
 
 namespace Bixie\Invoicemaker\Controller;
 
-use Pagekit\Application as App;
+use Bixie\Contactmanager\Model\Company;
 use Bixie\Invoicemaker\Model\Invoice;
+use Pagekit\Application as App;
 
 /**
  * @Access("invoicemaker: view invoices", admin=true)
@@ -18,16 +19,16 @@ class InvoiceController {
 	public function editAction ($id = 0) {
 
 		if (!$invoice = Invoice::find($id)) {
-
 			if ($id == 0) {
 				$invoice = Invoice::create();
 			}
-
 		}
 
 		if (!$invoice) {
 			App::abort(404, __('Invoice not found'));
 		}
+
+        $company = Company::find($invoice->company_id);
 
 		$twinfield = App::module('bixie/twinfield');
 
@@ -40,6 +41,7 @@ class InvoiceController {
 				'statuses' => Invoice::getStatuses(),
 				'templates' => App::module('bixie/invoicemaker')->getTemplates(),
                 'tfConfig' => $twinfield ? $twinfield->config() : [],
+                'ledger_numbers' => array_merge($twinfield->config('ledger_numbers'), $company->get('ledger_numbers', [])),
 				'invoice' => $invoice
 			],
 			'invoice' => $invoice
