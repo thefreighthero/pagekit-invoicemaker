@@ -1,5 +1,6 @@
 <?php
-$view->script('invoice-edit', 'bixie/invoicemaker:app/bundle/invoicemaker-invoice.js', ['bixie-pkframework']);
+$view->script('invoice-edit', 'bixie/invoicemaker:app/bundle/invoicemaker-invoice.js',
+    ['bixie-pkframework']);
 $iframe_src = $app->url('@invoicemaker/api/invoice/html', [
 	'invoice_number' => $invoice->invoice_number,
 	'key' => $app->module('bixie/invoicemaker')->getDownloadKey($invoice)
@@ -18,6 +19,7 @@ $iframe_src = $app->url('@invoicemaker/api/invoice/html', [
                 <span v-if="invoice.data.credit_for">
                     <em>{{ 'Credit for' | trans }}: </em> <a :href="$url.route('admin/invoicemaker/invoice/edit', { id: invoice.data.credit_for_id })" target="_blank"> <i class="uk-icon-external-link uk-margin-small-right"></i>{{ invoice.data.credit_for }}</a>
                 </span>
+
 
 			</div>
 			<div data-uk-margin>
@@ -42,6 +44,122 @@ $iframe_src = $app->url('@invoicemaker/api/invoice/html', [
                                   cols="30" rows="6"
                                   class="uk-width-1-1"></textarea>
                     </div>
+                </div>
+
+
+                <div>
+
+                    <div class="uk-panel uk-panel-box">
+                        <h3 class="uk-panel-title">Gekoppelde inkoopfacturen</h3>
+                        <div class="uk-form">
+                            <table class="uk-table uk-table-hover uk-table-middle">
+                                <thead>
+                                <tr>
+                                    <th>{{ 'PDF' | trans }}</th>
+                                    <th class="pk-table-min-width-100">{{ 'Date / Ledger number' | trans }}<br>{{ 'Company' | trans }}</th>
+                                    <th class="pk-table-min-width-100">{{ 'Invoice number' | trans }}<br>{{ 'Description' | trans }}</th>
+                                    <th class="pk-table-width-150 uk-text-center">
+                                        {{ 'Status' | trans }}
+                                    </th>
+                                    <th class="pk-table-min-width-100 uk-text-right">{{ 'Amount' | trans }}<br>{{ 'Open' | trans }}<br>{{ 'Dispute' | trans }}</label>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr class="check-item" v-for="purchase_invoice in purchase_invoices">
+
+                                    <td>
+                                        <a v-if="purchase_invoice.pdf_file" :href="purchase_invoice.pdf_url" download>
+                                            <i class="uk-icon-download uk-margin-small-right"></i></a>
+                                        <a v-if="purchase_invoice.pdf_file" :href="$url(purchase_invoice.pdf_url, {inline: 1})" class="uk-margin-small-right"
+                                           data-uk-lightbox="" data-lightbox-type="iframe">
+                                            <i class="uk-icon-search uk-margin-small-right"></i></a>
+                                    </td>
+                                    <td>
+                                        {{ purchase_invoice.date | date }}<br/>
+                                        <small>{{ purchase_invoice.ledger_number }}</small>
+                                        <small v-if="purchase_invoice.api_client !== 'master'"> - {{ purchase_invoice.api_client }}</small><br>
+                                        <a v-if="purchase_invoice.company_url" :href="purchase_invoice.company_url"
+                                           target="_blank"><i class="uk-icon-external-link uk-margin-small-right"></i></a>
+                                        {{ purchase_invoice.company_name }}
+                                    </td>
+                                    <td>
+                                        <a :href="$url.route('admin/twinfield/purchase_invoice/edit', { id: purchase_invoice.id })">
+                                            {{ purchase_invoice.invoice_number || '-' }}</a> <small
+                                                v-if="purchase_invoice.siblings_count > 1">({{ purchase_invoice.siblings_count }})</small>
+                                        <br>
+                                        {{ purchase_invoice.description }}
+                                        <a v-if="purchase_invoice.shipment_id" :href="purchase_invoice.shipment_url" target="_blank"
+                                           class="uk-display-block uk-text-small">
+                                            <i class="uk-icon-external-link uk-margin-small-right"></i>
+                                            #{{ purchase_invoice.shipment_id }}
+                                        </a>
+                                    </td>
+                                    <td class="uk-text-center">
+                                        <span class="uk-margin-small-right" :title="$trans('Exported')" data-uk-tooltip="delay:200">
+                                            <span>
+                                                <i v-if="purchase_invoice.exported" class="uk-icon-check uk-icon-justify uk-text-success"></i>
+                                                <i v-else class="uk-icon-times uk-icon-justify uk-text-danger"></i>
+                                            </span>
+                                        </span>
+                                        <br><span class="uk-margin-small-right" :title="$trans('Approved')" data-uk-tooltip="delay:200">
+                                            <a @click="toggleValue('approved', purchase_invoice)">
+                                                <i v-if="purchase_invoice.approved" class="uk-icon-check uk-icon-justify uk-text-success"></i>
+                                                <i v-else class="uk-icon-times uk-icon-justify uk-text-danger"></i>
+                                            </a>
+                                        </span>
+                                        <br><span class="uk-margin-small-right" :title="$trans('Paid')" data-uk-tooltip="delay:200">
+                                            <i v-if="purchase_invoice.paid" class="uk-icon-check uk-icon-justify uk-text-success"></i>
+                                            <i v-else class="uk-icon-times uk-icon-justify uk-text-danger"></i>
+                                        </span>
+                                    </td>
+                                    <td class="uk-text-nowrap uk-text-right">
+                                        {{ purchase_invoice.amount | currency '€ ' }}<br/>
+                                        <small v-if="purchase_invoice.siblings_count > 1">({{ purchase_invoice.invoice_number_amount | currency '€ ' }})</small>
+                                        {{ purchase_invoice.amount_open | currency '€ ' }}<br>
+                                        {{ purchase_invoice.amount_dispute | currency '€ ' }}
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="uk-panel uk-panel-box">
+                        <h3 class="uk-panel-title">Cash in</h3>
+                        <table class="uk-form uk-table uk-table-middle uk-margin-top-remove">
+                            <tr>
+                                <th class="uk-text-right pk-table-max-width-100">{{ 'Amount' | trans }}</th>
+                                <th class="uk-text-right">{{ 'Marge €' | trans }}</th>
+                                <th class="uk-text-right">{{ 'Marge %' | trans }}</th>
+                                <th class="uk-text-right">{{ 'Omzet' | trans }}</th>
+                                <th class="uk-text-right">{{ 'Betaald' | trans }}</th>
+                            </tr>
+                            <tbody>
+                            <tr >
+                                <td class="uk-text-right pk-table-max-width-100 uk-text-nowrap">
+                                    {{ amountDebetCredit(invoice, invoice_revenue.revenue_amount) | currency }}
+                                </td>
+                                <td class="uk-text-right pk-table-max-width-100 uk-text-nowrap">
+                                    {{ amountDebetCredit(invoice, shipment.price - shipment.cost_price) | currency }}
+
+                                </td>
+                                <td class="uk-text-right pk-table-max-width-100 uk-text-nowrap">
+                                    {{ amountDebetCredit(invoice, shipment.bruto_margin) }}%
+                                </td>
+                                <td class="uk-text-right pk-table-max-width-100 uk-text-nowrap">
+                                    {{ amountDebetCredit(invoice, invoice_revenue.revenue_amount) | currency }}
+                                </td>
+                                <td class="uk-text-right pk-table-max-width-100 uk-text-nowrap">
+                                    {{ amountPaidFromInvoice(invoice, invoice_revenue) | currency }}
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
                 </div>
 
             </div>
