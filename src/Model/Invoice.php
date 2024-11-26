@@ -92,6 +92,12 @@ class Invoice implements \JsonSerializable {
      * @var bool
      */
     public $exported = false;
+
+    /**
+     * @Column(type="datetime")
+     * @var \DateTime
+     */
+    public $exported_at;
     /**
 	 * @Column(type="string")
 	 * @var string
@@ -120,7 +126,8 @@ class Invoice implements \JsonSerializable {
 		'amount_open' => 'getAmountOpen',
 		'pdf_filename' => 'getPdfFilename',
 		'pdf_url' => 'getPdfUrl',
-		'key' => 'getKey',
+        'key' => 'getKey',
+        'debtor_company' => 'getDebtorCompany',
 	];
 
     /**
@@ -172,6 +179,13 @@ class Invoice implements \JsonSerializable {
      */
     public function getKey ($extra = '') {
         return sha1(App::system()->config('key') . '.' . $this->id . $extra);
+    }
+
+    /**
+     * @return string
+     */
+    public function getDebtorCompany () {
+        return $this->debtor->name;
     }
 
     /**

@@ -25,6 +25,7 @@ const vm = {
         },
         statuses: [],
         templates: [],
+        ledger_numbers: [],
         tfConfig: {},
         form: {},
     }, window.$data),
@@ -105,6 +106,23 @@ const vm = {
             return this.statuses[status] || status;
         },
 
+        amountDebetCredit(invoice, amount) {
+            return invoice.status === 'CREDIT' || (invoice.amount <= 0 && amount > 0) ? Number(amount) * -1: Number(amount);
+        },
+
+        amountPaidFromInvoice(invoice, invoice_revenue) {
+            const amount_paid = _.isArray(invoice.payments) ? invoice.payments.reduce((s, pymt) => {
+                if (!pymt.from_credit_invoice) {
+                    return s + Number(pymt.amount);
+                }
+                return s;
+            }, 0) : 0;
+            //clamp to cut off vat and customs
+            if (amount_paid < 0) {
+                return Math.max(amount_paid, invoice_revenue.revenue_amount * -1);
+            }
+            return Math.min(amount_paid, invoice_revenue.revenue_amount);
+        },
     },
 
 };
