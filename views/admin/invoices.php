@@ -42,9 +42,7 @@
             <tr>
                 <th class="pk-table-width-minimum"><input type="checkbox" v-check-all:selected.literal="input[name=id]"
                                                           number></th>
-                <th class="pk-table-min-width-100" v-order:invoice_number="config.filter.order">{{ 'Invoice #' | trans
-                    }}
-                </th>
+                <th class="pk-table-min-width-100" v-order:invoice_number="config.filter.order">{{ 'Invoice #' | trans }}</th>
                 <th class="pk-table-min-width-200">{{ 'Debtor name' | trans }}</th>
                 <th class="" v-order:ext_key="config.filter.order">{{ 'External key' | trans }}</th>
                 <th class="pk-table-min-width-100">
@@ -74,7 +72,8 @@
                 <td><input type="checkbox" name="id" value="{{ invoice.id }}" number></td>
                 <td>
                     <a :href="$url.route('admin/invoicemaker/invoice/edit', { id: invoice.id })">{{
-                        invoice.invoice_number }}</a><br/>
+                        invoice.invoice_number }}</a>
+                    <small v-if="invoice.data.hidden">{{ 'Verborgen v. klant' | trans }}</small>
                 </td>
                 <td>
                     {{ invoice.debtor.name }}<br/>

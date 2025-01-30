@@ -200,6 +200,16 @@ $iframe_src = $app->url('@invoicemaker/api/invoice/html', [
                     </div>
                 </div>
 
+                <div class="uk-form-row">
+
+                    <div class="uk-form-controls">
+                        <p class="uk-form-controls-condensed">
+                            <label><input type="checkbox" v-model="invoice.data.hidden" />
+                                {{ 'Verberg factuur voor klant' | trans }}
+                            </label>
+                        </p>
+                </div>
+
                 <h3>{{ 'Ledger data' | trans }}</h3>
 
                 <div class="uk-alert uk-alert-danger" v-if="invoice.exported">

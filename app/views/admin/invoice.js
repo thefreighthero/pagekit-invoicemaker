@@ -21,6 +21,7 @@ const vm = {
             payments: [],
             data: {
                 notes: '',
+                hidden: false,
             },
         },
         statuses: [],

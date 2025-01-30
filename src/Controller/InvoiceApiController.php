@@ -2,14 +2,11 @@
 
 namespace Bixie\Invoicemaker\Controller;
 
-use Bixie\Freighthero\Calculator\CalculatorException;
-use Bixie\Freighthero\Helpers\CalculatorHelper;
-use Bixie\Freighthero\Model\CalculatorData;
-use Pagekit\Application as App;
-use Pagekit\Application\Exception;
+use Bixie\Freighthero\Model\Shipment;
 use Bixie\Invoicemaker\InvoicemakerModule;
 use Bixie\Invoicemaker\Model\Invoice;
-use Bixie\Freighthero\Model\Shipment;
+use Pagekit\Application as App;
+use Pagekit\Application\Exception;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -29,7 +26,7 @@ class InvoiceApiController {
         $query = Invoice::query()->select('*, amount - amount_paid AS amount_open');
         $filter = array_merge(array_fill_keys([
             'template', 'invoice_group', 'company_id', 'user_id', 'only', 'status', 'exported',
-            'search', 'ext_key', 'order', 'limit',
+            'search', 'ext_key', 'order', 'limit', 'hide_hidden',
         ], ''), $filter);
 
         extract($filter, EXTR_SKIP);
@@ -69,6 +66,14 @@ class InvoiceApiController {
 
         if (!empty($only_open)) {
             $query->where('amount - amount_paid <> 0');
+        }
+
+        if (!empty($hide_hidden)) {  // Only apply filter if 'hidden' is specified
+            $query->where(function ($query) {
+                // Filter on 'hidden' = false or 'hidden' is not set (null or undefined)
+                $query->where("JSON_EXTRACT(data, '$.hidden') = :hidden", ['hidden' => false])
+                    ->orWhere("JSON_EXTRACT(data, '$.hidden') IS NULL");
+            });
         }
 
         $query->where('deleted_at IS NULL');
