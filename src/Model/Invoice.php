@@ -16,6 +16,11 @@ class Invoice implements \JsonSerializable {
 
 	use DataModelTrait, InvoiceModelTrait;
 
+    /* Invoice booking types: REPEAT, NEW, YEAR BOOKING */
+    const BOOKING_TYPE_REPEAT = "REPEAT";
+    const BOOKING_TYPE_NEW  = "NEW";
+    const BOOKING_TYPE_YEAR_BOOKING = "YEAR_BOOKING";
+
     /* Invoice initial and valid. */
     const STATUS_INITIAL = 'INITIAL';
 
@@ -98,6 +103,13 @@ class Invoice implements \JsonSerializable {
      * @var \DateTime
      */
     public $exported_at;
+
+    /**
+     * @Column(type="string")
+     * @var string
+     */
+    public $booking_type;
+
     /**
 	 * @Column(type="string")
 	 * @var string
