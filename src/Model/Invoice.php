@@ -153,6 +153,17 @@ class Invoice implements \JsonSerializable {
         ];
     }
 
+    /**
+     * @return array
+     */
+    public static function getBookingTypes () {
+        return [
+            self::BOOKING_TYPE_REPEAT => __('Repeat'),
+            self::BOOKING_TYPE_NEW => __('New'),
+            self::BOOKING_TYPE_YEAR_BOOKING => __('Year Booking'),
+        ];
+    }
+
 	/**
 	 * @return Debtor
 	 */
