@@ -5,6 +5,7 @@ import InvoiceAccountingEntries from '../../components/invoice-accounting-entrie
 // @vue/component
 const vm = {
 
+
     el: '#invoice-edit',
 
     name: 'Invoice',
@@ -18,6 +19,7 @@ const vm = {
         invoice: {
             debtor: {},
             invoice_lines: [],
+            booking_type: '',
             payments: [],
             data: {
                 notes: '',
@@ -29,6 +31,8 @@ const vm = {
         ledger_numbers: [],
         tfConfig: {},
         form: {},
+        booking_types: [],
+
     }, window.$data),
 
     computed: {
@@ -46,6 +50,9 @@ const vm = {
         }
         this.invoice.amount = Number(this.invoice.amount);
         this.invoice.amount_paid = Number(this.invoice.amount_paid);
+
+        console.log(this.invoice.booking_type);
+
     },
 
     ready() {

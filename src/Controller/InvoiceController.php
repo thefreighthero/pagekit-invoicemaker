@@ -76,6 +76,7 @@ class InvoiceController {
 
 		$twinfield = App::module('bixie/twinfield');
 
+
 		return [
 			'$view' => [
 				'title' => __('Invoice'),
@@ -89,9 +90,11 @@ class InvoiceController {
                 'invoice' => $invoice,
 			    'purchase_invoices' => $purchase_invoices,
                 'shipment' => $shipment,
-                'invoice_revenue' => $invoice_revenue
+                'invoice_revenue' => $invoice_revenue,
+                'booking_types' => Invoice::getBookingTypes(),
 			],
             'invoice' => $invoice,
+
 		];
 	}
 

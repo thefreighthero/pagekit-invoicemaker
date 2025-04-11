@@ -22,6 +22,7 @@ return [
                 $table->addColumn('exported_at', 'datetime', ['notnull' => false]);
                 $table->addColumn('exported', 'smallint', ['default' => 0]);
                 $table->addColumn('ext_key', 'string', ['length' => 255, 'notnull' => false]);
+                $table->addColumn('booking_type', 'string', ['length' => 16]); // new!
                 $table->addColumn('pdf_file', 'string', ['length' => 255, 'notnull' => false]);
 				$table->addColumn('user_id', 'string', ['unsigned' => true, 'notnull' => false]);
 				$table->addColumn('company_id', 'string', ['unsigned' => true, 'notnull' => false]);

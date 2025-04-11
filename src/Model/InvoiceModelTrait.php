@@ -2,7 +2,7 @@
 
 namespace Bixie\Invoicemaker\Model;
 
-use Bixie\Invoicemaker\Model\SoftDeleteTrait;
+use Bixie\Contactmanager\Model\Company;
 use Pagekit\Application as App;
 use Pagekit\Database\ORM\ModelTrait;
 
@@ -11,6 +11,50 @@ trait InvoiceModelTrait {
 	use SoftDeleteTrait, ModelTrait {
         SoftDeleteTrait::delete insteadof ModelTrait; // Use delete from SoftDeleteTrait
         SoftDeleteTrait::query insteadof ModelTrait; // Use query from SoftDeleteTrait
+        create as modelCreate;
+    }
+
+    /**
+     * @param array $data
+     * @return Invoice
+     */
+    public static function create ($data = []) {
+        // Resolve Invoice status
+        $company = Company::find($data['company_id']);
+
+        $booking_type = null;
+        if ($company->year_booking) {
+            $booking_type = Invoice::BOOKING_TYPE_YEAR_BOOKING;
+        } else {
+            $invoicesCountCompanyHas = Invoice::where("company_id = " . $data["company_id"])->count();
+            if ($invoicesCountCompanyHas == 0) {
+                $booking_type = Invoice::BOOKING_TYPE_NEW;
+            } else {
+                $booking_type = Invoice::BOOKING_TYPE_REPEAT;
+            }
+        }
+
+        $requiredFields = [
+            'status' => Invoice::STATUS_INITIAL,
+            'created' => new \DateTime(),
+            'user_id' => App::user()->id, // Or fetch user ID as needed
+            'company_id' => $data['company_id'] ?? 0, // Use $data or provide default value
+            'invoice_number' => '', // This might need to be generated based on some logic
+            'invoice_group' => '',
+            'amount' => 0.00, // Default value, adjust as needed
+            'amount_paid' => 0.00,
+            'payments' => [],
+            'exported' => false,
+            'booking_type' => $booking_type, // Default booking type
+        ];
+
+        // Merge passed data with the required fields
+        $data = array_merge($requiredFields, $data);
+
+        /** @var Invoice $invoice */
+        $invoice = self::modelCreate($data);
+
+        return $invoice;
     }
 
     /**
