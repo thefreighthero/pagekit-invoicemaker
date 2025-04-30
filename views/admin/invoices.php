@@ -47,7 +47,10 @@
                 </th>
                 <!-- Info with:
                  Debitor name, Account manager name, Company link  -->
-                <th class="pk-table-min-width-200">{{ 'Info' | trans }}</th>
+                <th class="pk-table-min-width-200">
+                    <input-filter :title="$trans('Info')" :value.sync="config.filter.account_manager_id"
+                                                                 :options="accountManagersOptions"></input-filter>
+                </th>
                 <th class="" v-order:ext_key="config.filter.order">{{ 'External key' | trans }}</th>
                 <th class="pk-table-min-width-100">
                     <input-filter :title="$trans('Status')" :value.sync="config.filter.status"

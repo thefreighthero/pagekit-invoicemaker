@@ -20,6 +20,7 @@ const vm = {
             config: {
                 filter: this.$session.get('bixie.invoicemaker.invoices.filter', {
                     order: 'invoice_number desc',
+                    account_manager_id: null,
                     search: '',
                     status: '',
                     only_open: 0,
@@ -66,6 +67,14 @@ const vm = {
                 return {text: group.name, value: group.name,};
             });
 
+            return [{label: this.$trans('Filter by'), options,},];
+        },
+
+        accountManagersOptions() {
+            const options = [];
+            _.forEach(this.moderators, (moderator, key) => {
+                options.push({value: key, text: moderator.name,});
+            });
             return [{label: this.$trans('Filter by'), options,},];
         },
 

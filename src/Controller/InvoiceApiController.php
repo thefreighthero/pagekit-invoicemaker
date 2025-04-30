@@ -26,7 +26,7 @@ class InvoiceApiController {
         $query = Invoice::query()->select('*, amount - amount_paid AS amount_open');
         $filter = array_merge(array_fill_keys([
             'template', 'invoice_group', 'company_id', 'user_id', 'only', 'status', 'exported',
-            'search', 'ext_key', 'order', 'limit', 'hide_hidden',
+            'search', 'ext_key', 'order', 'limit', 'hide_hidden'
         ], ''), $filter);
 
         extract($filter, EXTR_SKIP);
@@ -76,6 +76,8 @@ class InvoiceApiController {
             });
         }
 
+
+
         $query->where('deleted_at IS NULL');
 
         if ($search) {
@@ -95,7 +97,6 @@ class InvoiceApiController {
 
         $invoices = array_values($query->offset($page * $limit)->limit($limit)->orderBy($order[1], $order[2])->get());
 
-        $reachedShipments = 0;
         // get account manager id
         foreach ($invoices as $key => $invoice) {
             $accountManagerId = $invoice->account_manager_id;
