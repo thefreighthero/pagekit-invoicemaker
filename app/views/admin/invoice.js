@@ -32,6 +32,7 @@ const vm = {
         tfConfig: {},
         form: {},
         booking_types: [],
+        moderators: [],
 
     }, window.$data),
 
@@ -130,6 +131,12 @@ const vm = {
                 return Math.max(amount_paid, invoice_revenue.revenue_amount * -1);
             }
             return Math.min(amount_paid, invoice_revenue.revenue_amount);
+        },
+
+        isCmCompany(extKey) {
+            const regex = /^cm\.company\.\d+$/;
+            console.log(regex.test(extKey));
+            return regex.test(extKey);
         },
     },
 

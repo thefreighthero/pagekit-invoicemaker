@@ -186,6 +186,29 @@ $iframe_src = $app->url('@invoicemaker/api/invoice/html', [
             </div>
             <div class="uk-width-large-1-3">
 
+                <!-- Booking type select -->
+                <div class="uk-form-row">
+                    <label class="uk-form-label">{{ 'Booking type' | trans }}</label>
+                    <div class="uk-form-controls">
+                        <select v-model="invoice.booking_type" class="uk-form-width-medium">
+                            <option v-for="(type, label) in booking_types" :value="type">{{ label }}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Account manager id select -->
+                <div class="uk-form-row">
+                    <label class="uk-form-label">{{ 'Account manager' | trans }}</label>
+                    <div class="uk-form-controls">
+                        <select v-if="isCmCompany(invoice.ext_key)" v-model="invoice.account_manager_id" class="uk-form-width-medium">
+                            <option v-for="(id, moderator) in moderators" :value="moderator.id">{{ moderator.name }}</option>
+                        </select>
+                        <p v-if="!isCmCompany(invoice.ext_key)" class="uk-text-italic uk-text-small">
+                            {{ 'Account manager kan niet gewijzigd worden voor facturen van verzending!' }}
+                        </p>
+                    </div>
+                </div>
+
                 <div class="uk-form-row">
                     <span class="uk-form-label">{{ 'PDF File' | trans }}</span>
                     <div class="uk-form-controls uk-form-controls-text">
@@ -405,15 +428,7 @@ $iframe_src = $app->url('@invoicemaker/api/invoice/html', [
                         </div>
                     </div>
 
-                    <!-- Booking type select -->
-                    <div class="uk-form-row">
-                        <label class="uk-form-label">{{ 'Booking type' | trans }}</label>
-                        <div class="uk-form-controls">
-                            <select v-model="invoice.booking_type" class="uk-form-width-medium">
-                                <option v-for="(type, label) in booking_types" :value="type">{{ label }}</option>
-                            </select>
-                        </div>
-                    </div>
+
                 </div>
 
             </div>
