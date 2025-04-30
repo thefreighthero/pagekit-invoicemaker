@@ -87,6 +87,7 @@ const vm = {
         },
 
 
+
     },
 
     watch: {
@@ -170,6 +171,15 @@ const vm = {
                 const moderator = this.moderators.find(m => m.id === invoice.account_manager_id);
                 return moderator.name;
             }
+        },
+
+        isCmCompany(extKey) {
+            const regex = /^cm\.company\.\d+$/;
+            return regex.test(extKey);
+        },
+
+        extractShipmentId(extKey) {
+            return extKey.substring(13);
         },
 
     },

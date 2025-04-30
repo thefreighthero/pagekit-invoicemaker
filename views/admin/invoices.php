@@ -115,7 +115,15 @@
 
                 </td>
                 <td>
-                    <em>{{ invoice.ext_key }}</em>
+                    <!-- Link to shipment if ext key is  -->
+                    <a target="_blank" v-if="!isCmCompany(invoice.ext_key)"
+                       :href="'/portal/admin/freighthero/shipment/edit?id=' + extractShipmentId(invoice.ext_key)" @click.stop>
+                        {{ invoice.ext_key }}
+                    </a>
+                    <a target="_blank" v-else
+                       :href="'/portal/admin/contactmanager/company/edit?id=' + invoice.company_id" @click.stop>
+                        {{ invoice.ext_key }}
+                    </a>
                 </td>
                 <td>
                     {{ getStatusText(invoice.status) }}

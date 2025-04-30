@@ -204,7 +204,7 @@ $iframe_src = $app->url('@invoicemaker/api/invoice/html', [
                             <option v-for="(id, moderator) in moderators" :value="moderator.id">{{ moderator.name }}</option>
                         </select>
                         <p v-if="!isCmCompany(invoice.ext_key)" class="uk-text-italic uk-text-small">
-                            {{ 'Account manager kan niet gewijzigd worden voor facturen van verzending!' }}
+                            Account manager kan niet gewijzigd worden voor facturen van verzending!
                         </p>
                     </div>
                 </div>
