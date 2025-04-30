@@ -42,8 +42,12 @@
             <tr>
                 <th class="pk-table-width-minimum"><input type="checkbox" v-check-all:selected.literal="input[name=id]"
                                                           number></th>
-                <th class="pk-table-min-width-100" v-order:invoice_number="config.filter.order">{{ 'Invoice #' | trans }}</th>
-                <th class="pk-table-min-width-200">{{ 'Debtor name' | trans }}</th>
+                <th class="pk-table-min-width-100" v-order:invoice_number="config.filter.order">{{ 'Invoice #' | trans
+                    }}
+                </th>
+                <!-- Info with:
+                 Debitor name, Account manager name, Company link  -->
+                <th class="pk-table-min-width-200">{{ 'Info' | trans }}</th>
                 <th class="" v-order:ext_key="config.filter.order">{{ 'External key' | trans }}</th>
                 <th class="pk-table-min-width-100">
                     <input-filter :title="$trans('Status')" :value.sync="config.filter.status"
@@ -76,8 +80,18 @@
                     <small v-if="invoice.data.hidden">{{ 'Verborgen v. klant' | trans }}</small>
                 </td>
                 <td>
+                    <!-- Debtor name and company -->
                     {{ invoice.debtor.name }}<br/>
-                    <small>{{ invoice.debtor.company }}</small>
+
+                    <!-- Company link -->
+                    <a target="_blank"
+                       :href="'/portal/admin/contactmanager/company/edit?id=' + invoice.company_id"
+                       @click.stop>
+                        <small>{{ invoice.debtor.company }}</small>
+                    </a>
+
+                    <!-- Account manager -->
+                    <p class="uk-margin-remove uk-text-small">{{ accountManagerName(invoice) || 'Geen account manager gekkopeld' }}</p>
 
                     <div class="uk-position-relative uk-float-right"
                          data-uk-dropdown="pos:'bottom-right', mode: 'hover', delay: 200">

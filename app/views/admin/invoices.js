@@ -35,6 +35,7 @@ const vm = {
             types: {},
             statuses: {},
             selected: [],
+            moderators: [],
         }, window.$data);
     },
 
@@ -76,6 +77,7 @@ const vm = {
             return this.invoices ? this.invoices.reduce((sum, invoice) => sum + Number(invoice.amount_open), 0) : 0;
         },
 
+
     },
 
     watch: {
@@ -98,6 +100,7 @@ const vm = {
     created() {
         this.Invoices = this.$resource('api/invoicemaker/invoice{/id}');
         this.$watch('config.page', this.load, {immediate: true,});
+        console.log(this.moderators);
     },
 
     methods: {
@@ -115,7 +118,9 @@ const vm = {
         },
 
         getSelected() {
-            return this.invoices.filter(function (invoice) { return this.selected.indexOf(invoice.id) !== -1; }, this);
+            return this.invoices.filter(function (invoice) {
+                return this.selected.indexOf(invoice.id) !== -1;
+            }, this);
         },
 
         getTypeLabel(name) {
@@ -140,13 +145,22 @@ const vm = {
         removeInvoices() {
             this.Invoices.delete({id: 'bulk',}, {ids: this.selected,}).then((request) => {
                 this.load();
-                if(request.data.message == 'error') {
+                if (request.data.message == 'error') {
                     this.$notify('Er is een fout opgetreden.');
                 } else {
                     this.$notify('Invoices(s) deleted.');
                 }
 
             });
+        },
+
+        accountManagerName(invoice) {
+            // Check if invoice has account manager id
+            if (invoice.account_manager_id) {
+                // Look for the manager in the moderators list
+                const moderator = this.moderators.find(m => m.id === invoice.account_manager_id);
+                return moderator.name;
+            }
         },
 
     },

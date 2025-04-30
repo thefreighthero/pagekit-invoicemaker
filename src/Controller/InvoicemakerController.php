@@ -33,7 +33,8 @@ class InvoicemakerController {
 				'config' => [
 					'filter' => (object) $filter,
 					'page' => $page
-				]
+				],
+                'moderators' => App::module('bixie/taskmanager')->getModerators(),
 			]
 		];
 	}
