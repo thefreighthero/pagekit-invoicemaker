@@ -33,7 +33,13 @@ class InvoicemakerController {
 				'config' => [
 					'filter' => (object) $filter,
 					'page' => $page
-				]
+				],
+                'moderators' => App::module('bixie/taskmanager')->getModerators(),
+                'externalKeys' => [
+                    'tfh.shipment.' => __('Shipment'),
+                    'cm.company.' => __('Company'),
+                ],
+                'booking_types' => Invoice::getBookingTypes(),
 			]
 		];
 	}

@@ -42,9 +42,18 @@
             <tr>
                 <th class="pk-table-width-minimum"><input type="checkbox" v-check-all:selected.literal="input[name=id]"
                                                           number></th>
-                <th class="pk-table-min-width-100" v-order:invoice_number="config.filter.order">{{ 'Invoice #' | trans }}</th>
-                <th class="pk-table-min-width-200">{{ 'Debtor name' | trans }}</th>
-                <th class="" v-order:ext_key="config.filter.order">{{ 'External key' | trans }}</th>
+                <th class="pk-table-min-width-100" v-order:invoice_number="config.filter.order">{{ 'Invoice #' | trans
+                    }}
+                </th>
+                <!-- Info with:
+                 Debitor name, Account manager name, Company link  -->
+                <th class="pk-table-min-width-200">
+                    <input-filter :title="$trans('Info')" :value.sync="config.filter.account_manager_id"
+                                  :options="accountManagersOptions"></input-filter>
+                </th>
+                <th>
+                    <input-filter :title="$trans('External key')" :value.sync="config.filter.ext_key"
+                                  :options="externalKeysOptions"></input-filter>
                 <th class="pk-table-min-width-100">
                     <input-filter :title="$trans('Status')" :value.sync="config.filter.status"
                                   :options="statusOptions"></input-filter>
@@ -73,14 +82,27 @@
                 <td>
                     <a :href="$url.route('admin/invoicemaker/invoice/edit', { id: invoice.id })">{{
                         invoice.invoice_number }}</a>
+                    <em>{{ invoice.booking_type && invoice.booking_type.trim() !== '' ? invoice.booking_type : 'Geen
+                        booking type aangegeven!' }}</em>
                     <small v-if="invoice.data.hidden">{{ 'Verborgen v. klant' | trans }}</small>
                 </td>
                 <td>
+                    <!-- Debtor name and company -->
                     {{ invoice.debtor.name }}<br/>
-                    <small>{{ invoice.debtor.company }}</small>
+
+                    <!-- Company link -->
+                    <a target="_blank"
+                       :href="'/admin/contactmanager/company/edit?id=' + invoice.company_id"
+                       @click.stop>
+                        <small>{{ invoice.debtor.company }}</small>
+                    </a>
+
+                    <!-- Account manager -->
+                    <p class="uk-margin-remove uk-text-small">{{ accountManagerName(invoice) || 'Geen account manager
+                        gekkopeld' }}</p>
 
                     <div class="uk-position-relative uk-float-right"
-                         data-uk-dropdown="pos:'bottom-right', mode: 'hover', delay: 200">
+                         data-uk-dropdown="pos:'bottom-right', mode: 'click', delay: 200" @click.stop>
                         <a><strong><i class="uk-icon-info-circle"></i></strong></a>
                         <div class="uk-dropdown">
                             <div v-if="invoice.debtor.company">
@@ -93,12 +115,58 @@
                             <div v-if="invoice.debtor.phone">
                                 <i class="uk-icon-phone uk-icon-justify"></i>{{ invoice.debtor.phone }}
                             </div>
+
+                            <!--Account manager select -->
+                            <div>
+                                <div v-if="isCmCompany(invoice.ext_key)">
+                                    <select v-model="invoice.account_manager_id" @change="save(invoice, true)"
+                                            class="uk-form-width-medium">
+                                        <option :value="" disabled>{{ 'Geen acccount manager' | trans }}</option>
+                                        <option v-for="(id, moderator) in moderators" :value="moderator.id">{{
+                                            moderator.name }}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div v-if="!isCmCompany(invoice.ext_key)">
+                                    <p class="uk-text-italic uk-text-small">
+                                        Account manager kan niet gewijzigd worden voor facturen van verzending! Ga naar
+                                        <a target="_blank"
+                                           :href="'/admin/freighthero/shipment/edit?id=' + extractShipmentId(invoice.ext_key)"
+                                           @click.stop>
+                                            verzending
+                                        </a>
+                                        om dit aan te passen!
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!--Booking type select -->
+                            <div>
+                                <select id="form-assigned" class="uk-width-1-1" v-model="invoice.booking_type" @change="save(invoice, true)">
+                                    <option :value="" disabled>{{ 'Geen booking type' | trans }}</option>
+                                    <option v-for="(type, label) in booking_types" :value="type">{{ label }}
+                                    </option>
+                                </select>
+                            </div>
+
                         </div>
                     </div>
 
                 </td>
                 <td>
-                    <em>{{ invoice.ext_key }}</em>
+                    <!-- Link to shipment if ext key is  -->
+                    <a target="_blank" v-if="!isCmCompany(invoice.ext_key)"
+                       :href="'/admin/freighthero/shipment/edit?id=' + extractShipmentId(invoice.ext_key)"
+                       @click.stop class="uk-flex">
+                        <strong><i class="uk-icon-truck uk-margin-small-right"></i></strong>
+                        {{ invoice.ext_key }}
+                    </a>
+                    <a target="_blank" v-if="isCmCompany(invoice.ext_key)"
+                       :href="'/admin/contactmanager/company/edit?id=' + invoice.company_id"
+                       @click.stop class="uk-flex">
+                        <strong><i class="uk-icon-phone uk-margin-small-right"></i></strong>
+                        {{ invoice.ext_key }}
+                    </a>
                 </td>
                 <td>
                     {{ getStatusText(invoice.status) }}

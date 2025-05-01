@@ -111,6 +111,12 @@ class Invoice implements \JsonSerializable {
     public $booking_type;
 
     /**
+     * @Column(type="integer")
+     * @var int
+     */
+    public $account_manager_id;
+
+    /**
 	 * @Column(type="string")
 	 * @var string
 	 */

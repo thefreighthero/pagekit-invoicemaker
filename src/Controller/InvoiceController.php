@@ -92,6 +92,7 @@ class InvoiceController {
                 'shipment' => $shipment,
                 'invoice_revenue' => $invoice_revenue,
                 'booking_types' => Invoice::getBookingTypes(),
+                'moderators' => App::module('bixie/taskmanager')->getModerators(),
 			],
             'invoice' => $invoice,
 

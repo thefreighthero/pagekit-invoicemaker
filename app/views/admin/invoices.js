@@ -20,6 +20,7 @@ const vm = {
             config: {
                 filter: this.$session.get('bixie.invoicemaker.invoices.filter', {
                     order: 'invoice_number desc',
+                    account_manager_id: null,
                     search: '',
                     status: '',
                     only_open: 0,
@@ -35,6 +36,9 @@ const vm = {
             types: {},
             statuses: {},
             selected: [],
+            moderators: [],
+            externalKeys: [],
+            booking_types: [],
         }, window.$data);
     },
 
@@ -59,12 +63,29 @@ const vm = {
             return [{label: this.$trans('Filter by'), options,},];
         },
 
+        externalKeysOptions() {
+
+            const options = [];
+            _.forEach(this.externalKeys, (status, key) => {
+                options.push({value: key, text: status,});
+            });
+            return [{label: this.$trans('Filter by'), options,},];
+        },
+
         groupOptions() {
 
             const options = this.groups.map(function (group) {
                 return {text: group.name, value: group.name,};
             });
 
+            return [{label: this.$trans('Filter by'), options,},];
+        },
+
+        accountManagersOptions() {
+            const options = [];
+            _.forEach(this.moderators, (moderator, key) => {
+                options.push({value: key, text: moderator.name,});
+            });
             return [{label: this.$trans('Filter by'), options,},];
         },
 
@@ -76,12 +97,15 @@ const vm = {
             return this.invoices ? this.invoices.reduce((sum, invoice) => sum + Number(invoice.amount_open), 0) : 0;
         },
 
+
     },
 
     watch: {
 
         'config.filter': {
             handler: function (filter) {
+
+
                 if (this.config.page) {
                     this.config.page = 0;
                 } else {
@@ -98,6 +122,7 @@ const vm = {
     created() {
         this.Invoices = this.$resource('api/invoicemaker/invoice{/id}');
         this.$watch('config.page', this.load, {immediate: true,});
+        console.log(this.moderators);
     },
 
     methods: {
@@ -115,7 +140,9 @@ const vm = {
         },
 
         getSelected() {
-            return this.invoices.filter(function (invoice) { return this.selected.indexOf(invoice.id) !== -1; }, this);
+            return this.invoices.filter(function (invoice) {
+                return this.selected.indexOf(invoice.id) !== -1;
+            }, this);
         },
 
         getTypeLabel(name) {
@@ -130,9 +157,12 @@ const vm = {
             return _.size(invoice.payments);
         },
 
-        save(invoice) {
+        save(invoice, noLoad = null) {
             return this.Invoices.save({id: invoice.id,}, {invoice,}).then(() => {
-                this.load();
+                if (!noLoad)
+                {
+                    this.load();
+                }
                 this.$notify('Invoice saved.');
             });
         },
@@ -140,13 +170,31 @@ const vm = {
         removeInvoices() {
             this.Invoices.delete({id: 'bulk',}, {ids: this.selected,}).then((request) => {
                 this.load();
-                if(request.data.message == 'error') {
+                if (request.data.message == 'error') {
                     this.$notify('Er is een fout opgetreden.');
                 } else {
                     this.$notify('Invoices(s) deleted.');
                 }
 
             });
+        },
+
+        accountManagerName(invoice) {
+            // Check if invoice has account manager id
+            if (invoice.account_manager_id) {
+                // Look for the manager in the moderators list
+                const moderator = this.moderators.find(m => m.id === invoice.account_manager_id);
+                return moderator.name;
+            }
+        },
+
+        isCmCompany(extKey) {
+            const regex = /^cm\.company\.\d+$/;
+            return regex.test(extKey);
+        },
+
+        extractShipmentId(extKey) {
+            return extKey.substring(13);
         },
 
     },
