@@ -51,7 +51,9 @@
                     <input-filter :title="$trans('Info')" :value.sync="config.filter.account_manager_id"
                                                                  :options="accountManagersOptions"></input-filter>
                 </th>
-                <th class="" v-order:ext_key="config.filter.order">{{ 'External key' | trans }}</th>
+                <th>
+                    <input-filter :title="$trans('External key')" :value.sync="config.filter.ext_key"
+                                  :options="externalKeysOptions"></input-filter>
                 <th class="pk-table-min-width-100">
                     <input-filter :title="$trans('Status')" :value.sync="config.filter.status"
                                   :options="statusOptions"></input-filter>

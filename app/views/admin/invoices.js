@@ -37,6 +37,7 @@ const vm = {
             statuses: {},
             selected: [],
             moderators: [],
+            externalKeys: [],
         }, window.$data);
     },
 
@@ -56,6 +57,15 @@ const vm = {
 
             const options = [];
             _.forEach(this.statuses, (status, key) => {
+                options.push({value: key, text: status,});
+            });
+            return [{label: this.$trans('Filter by'), options,},];
+        },
+
+        externalKeysOptions() {
+
+            const options = [];
+            _.forEach(this.externalKeys, (status, key) => {
                 options.push({value: key, text: status,});
             });
             return [{label: this.$trans('Filter by'), options,},];
@@ -94,6 +104,8 @@ const vm = {
 
         'config.filter': {
             handler: function (filter) {
+
+
                 if (this.config.page) {
                     this.config.page = 0;
                 } else {

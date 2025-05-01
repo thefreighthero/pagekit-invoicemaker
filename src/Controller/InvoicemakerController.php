@@ -35,6 +35,10 @@ class InvoicemakerController {
 					'page' => $page
 				],
                 'moderators' => App::module('bixie/taskmanager')->getModerators(),
+                'externalKeys' => [
+                    'tfh.shipment.' => __('Shipment'),
+                    'cm.company.' => __('Company'),
+                ],
 			]
 		];
 	}

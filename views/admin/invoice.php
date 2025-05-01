@@ -14,7 +14,18 @@ $iframe_src = $app->url('@invoicemaker/api/invoice/html', [
             <div data-uk-margin>
 
                 <h2 class="uk-margin-remove">{{ 'Edit invoice' | trans }} <em>{{ invoice.invoice_number }}</em></h2>
-                <em>{{ 'External key' | trans }}:</em> <span>{{ invoice.ext_key }}</span><br/>
+                <div>
+                    <em>{{ 'External key' | trans }}:</em>
+                    <a target="_blank" v-if="!isCmCompany(invoice.ext_key)"
+                       :href="'/portal/admin/freighthero/shipment/edit?id=' + extractShipmentId(invoice.ext_key)"
+                       @click.stop>
+                        {{ invoice.ext_key }}
+                    </a>
+                    <a target="_blank" v-else
+                       :href="'/portal/admin/contactmanager/company/edit?id=' + invoice.company_id" @click.stop>
+                        {{ invoice.ext_key }}
+                    </a>
+                </div>
                 <em>{{ 'Status' | trans }}:</em> <span>{{ getStatusText(invoice.status) }}</span><br/>
                 <span v-if="invoice.data.credit_for">
                     <em>{{ 'Credit for' | trans }}: </em> <a
@@ -200,11 +211,19 @@ $iframe_src = $app->url('@invoicemaker/api/invoice/html', [
                 <div class="uk-form-row">
                     <label class="uk-form-label">{{ 'Account manager' | trans }}</label>
                     <div class="uk-form-controls">
-                        <select v-if="isCmCompany(invoice.ext_key)" v-model="invoice.account_manager_id" class="uk-form-width-medium">
-                            <option v-for="(id, moderator) in moderators" :value="moderator.id">{{ moderator.name }}</option>
+                        <select v-if="isCmCompany(invoice.ext_key)" v-model="invoice.account_manager_id"
+                                class="uk-form-width-medium">
+                            <option v-for="(id, moderator) in moderators" :value="moderator.id">{{ moderator.name }}
+                            </option>
                         </select>
                         <p v-if="!isCmCompany(invoice.ext_key)" class="uk-text-italic uk-text-small">
-                            Account manager kan niet gewijzigd worden voor facturen van verzending!
+                            Account manager kan niet gewijzigd worden voor facturen van verzending! Ga naar
+                            <a target="_blank"
+                               :href="'/portal/admin/freighthero/shipment/edit?id=' + extractShipmentId(invoice.ext_key)"
+                               @click.stop>
+                                verzending
+                            </a>
+                            om dit aan te passen!
                         </p>
                     </div>
                 </div>

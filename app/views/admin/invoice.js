@@ -138,6 +138,10 @@ const vm = {
             console.log(regex.test(extKey));
             return regex.test(extKey);
         },
+
+        extractShipmentId(extKey) {
+            return extKey.substring(13);
+        },
     },
 
 };

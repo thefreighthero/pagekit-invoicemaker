@@ -45,7 +45,7 @@ class InvoiceApiController {
         }
 
         if (!empty($ext_key)) {
-            $query->where('ext_key = :ext_key', compact('ext_key'));
+            $query->where('ext_key LIKE :ext_key', ['ext_key' => '%' . $ext_key . '%']);
         }
 
         if (!empty($user_id)) {
