@@ -49,7 +49,7 @@
                  Debitor name, Account manager name, Company link  -->
                 <th class="pk-table-min-width-200">
                     <input-filter :title="$trans('Info')" :value.sync="config.filter.account_manager_id"
-                                                                 :options="accountManagersOptions"></input-filter>
+                                  :options="accountManagersOptions"></input-filter>
                 </th>
                 <th>
                     <input-filter :title="$trans('External key')" :value.sync="config.filter.ext_key"
@@ -96,10 +96,11 @@
                     </a>
 
                     <!-- Account manager -->
-                    <p class="uk-margin-remove uk-text-small">{{ accountManagerName(invoice) || 'Geen account manager gekkopeld' }}</p>
+                    <p class="uk-margin-remove uk-text-small">{{ accountManagerName(invoice) || 'Geen account manager
+                        gekkopeld' }}</p>
 
                     <div class="uk-position-relative uk-float-right"
-                         data-uk-dropdown="pos:'bottom-right', mode: 'hover', delay: 200">
+                         data-uk-dropdown="pos:'bottom-right', mode: 'click', delay: 200" @click.stop>
                         <a><strong><i class="uk-icon-info-circle"></i></strong></a>
                         <div class="uk-dropdown">
                             <div v-if="invoice.debtor.company">
@@ -112,20 +113,43 @@
                             <div v-if="invoice.debtor.phone">
                                 <i class="uk-icon-phone uk-icon-justify"></i>{{ invoice.debtor.phone }}
                             </div>
+                            <div v-if="isCmCompany(invoice.ext_key)">
+                                <select v-model="invoice.account_manager_id" @change="save(invoice)"
+                                        class="uk-form-width-medium">
+                                    <option v-for="(id, moderator) in moderators" :value="moderator.id">{{
+                                        moderator.name }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div v-if="!isCmCompany(invoice.ext_key)">
+                                <p class="uk-text-italic uk-text-small">
+                                    Account manager kan niet gewijzigd worden voor facturen van verzending! Ga naar
+                                    <a target="_blank"
+                                       :href="'/portal/admin/freighthero/shipment/edit?id=' + extractShipmentId(invoice.ext_key)"
+                                       @click.stop>
+                                        verzending
+                                    </a>
+                                    om dit aan te passen!
+                                </p>
+                            </div>
                         </div>
                     </div>
 
                 </td>
                 <td>
-                    <!-- Link to shipment if ext key is  -->
-                    <a target="_blank" v-if="!isCmCompany(invoice.ext_key)"
-                       :href="'/portal/admin/freighthero/shipment/edit?id=' + extractShipmentId(invoice.ext_key)" @click.stop>
-                        {{ invoice.ext_key }}
-                    </a>
-                    <a target="_blank" v-else
-                       :href="'/portal/admin/contactmanager/company/edit?id=' + invoice.company_id" @click.stop>
-                        {{ invoice.ext_key }}
-                    </a>
+                        <!-- Link to shipment if ext key is  -->
+                            <a target="_blank" v-if="!isCmCompany(invoice.ext_key)"
+                               :href="'/portal/admin/freighthero/shipment/edit?id=' + extractShipmentId(invoice.ext_key)"
+                               @click.stop class="uk-flex">
+                                <strong><i class="uk-icon-truck uk-margin-small-right"></i></strong>
+                                {{ invoice.ext_key }}
+                            </a>
+                            <a target="_blank" v-if="isCmCompany(invoice.ext_key)"
+                               :href="'/portal/admin/contactmanager/company/edit?id=' + invoice.company_id"
+                               @click.stop class="uk-flex">
+                                <strong><i class="uk-icon-phone uk-margin-small-right"></i></strong>
+                                {{ invoice.ext_key }}
+                            </a>
                 </td>
                 <td>
                     {{ getStatusText(invoice.status) }}
