@@ -38,6 +38,7 @@ const vm = {
             selected: [],
             moderators: [],
             externalKeys: [],
+            booking_types: [],
         }, window.$data);
     },
 
@@ -156,9 +157,12 @@ const vm = {
             return _.size(invoice.payments);
         },
 
-        save(invoice) {
+        save(invoice, noLoad = null) {
             return this.Invoices.save({id: invoice.id,}, {invoice,}).then(() => {
-                this.load();
+                if (!noLoad)
+                {
+                    this.load();
+                }
                 this.$notify('Invoice saved.');
             });
         },

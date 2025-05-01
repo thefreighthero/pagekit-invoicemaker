@@ -39,6 +39,7 @@ class InvoicemakerController {
                     'tfh.shipment.' => __('Shipment'),
                     'cm.company.' => __('Company'),
                 ],
+                'booking_types' => Invoice::getBookingTypes(),
 			]
 		];
 	}
