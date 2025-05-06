@@ -15,6 +15,13 @@ $iframe_src = $app->url('@invoicemaker/api/invoice/html', [
 
                 <h2 class="uk-margin-remove">{{ 'Edit invoice' | trans }} <em>{{ invoice.invoice_number }}</em></h2>
                 <div>
+                    <span>{{ 'Bedrijf: ' | trans }} </span>
+                    <a target="_blank" v-else
+                       :href="'/admin/contactmanager/company/edit?id=' + invoice.company_id" @click.stop>
+                        {{ invoice.company_id }}
+                    </a>
+                </div>
+                <div>
                     <em>{{ 'External key' | trans }}:</em>
                     <a target="_blank" v-if="!isCmCompany(invoice.ext_key)"
                        :href="'/admin/freighthero/shipment/edit?id=' + extractShipmentId(invoice.ext_key)"
