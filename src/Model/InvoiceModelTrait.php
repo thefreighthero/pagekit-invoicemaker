@@ -75,54 +75,6 @@ trait InvoiceModelTrait {
         }
     }
     
-    /**
-     * @saved
-     * @param $event
-     * @param Invoice $invoice
-     * @throws \Exception
-     */
-    public static function saved($event, Invoice $invoice) {
-
-        if (stripos($invoice->ext_key, 'tfh.shipment') === false
-            || $invoice->template == App::module('bixie/freighthero')->config('invoicemaker_template_advance')) {
-            return;
-        }
-        $total_amount = App::module('bixie/invoicemaker')->getSumByExternKey($invoice->ext_key);
-        $open_amount = App::module('bixie/invoicemaker')->getOpenSumByExternKey($invoice->ext_key);
-
-        $id = str_replace('tfh.shipment.', '', $invoice->ext_key);
-        $shipment = Shipment::find($id);
-        $payed = $shipment->get('invoice_payed');
-        if (!$payed && $open_amount <= 0 && $total_amount >= $shipment->price) {
-            $shipment->set('invoice_payed', true);
-            ShipmentHelper::saveShipment($shipment, [], [
-                ['type' => 'SHIPMENT_SET_VALUE', 'payload' => [
-                    'key' => 'invoice_payed', 'value' => true,
-                ], 'timestamp' => time(),],
-            ]);
-            //set task completed
-            if ($preset_ids = App::module('bixie/freighthero')->config('preset_invoice_paid')
-                and $task = Task::where([
-                    'status' => Task::STATUS_TODO,
-                    'ext_key' => 'tfh.shipment.' . $shipment->id,
-                    ])->whereIn('preset_id', $preset_ids)->first()) {
-                App::module('bixie/taskmanager')->saveTask([
-                    'id' => $task->id,
-                    'status' => Task::STATUS_DONE,
-                ]);
-            }
-        }
-        if ($payed && $open_amount > 0) {
-            $shipment->set('invoice_payed', false);
-            ShipmentHelper::saveShipment($shipment, [], [
-                ['type' => 'SHIPMENT_SET_VALUE', 'payload' => [
-                    'key' => 'invoice_payed', 'value' => false,
-                ], 'timestamp' => time(),],
-            ]);
-        }
-        
-    }
-
 	/**
 	 * @param $invoice_number
 	 * @return Invoice|bool
