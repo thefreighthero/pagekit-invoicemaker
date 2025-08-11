@@ -58,7 +58,7 @@
                     <input-filter :title="$trans('Status')" :value.sync="config.filter.status"
                                   :options="statusOptions"></input-filter>
                 </th>
-                <th v-order:created="config.filter.order">{{ 'Date' | trans }}</th>
+                <th v-order:due_date="config.filter.order">{{ 'Dates' | trans }}</th>
                 <th class="pk-table-min-width-100" v-order:amount="config.filter.order">{{ 'Amount' | trans }}</th>
                 <th class="pk-table-width-minimum"><i class="uk-icon-money" :title="$trans('Payments')"
                                                       data-uk-tooltip></i></th>
@@ -172,7 +172,8 @@
                     {{ getStatusText(invoice.status) }}
                 </td>
                 <td>
-                    {{ invoice.created | date 'shortDate' }}
+                    Gemaakt: <strong>{{ invoice.created | date 'shortDate' }}</strong>
+                    Vervaldatum: <strong>{{ invoice.data.due_date | date 'shortDate' }}</strong>
                 </td>
                 <td class="uk-text-nowrap uk-text-right">
                     {{ invoice.amount | currency '€ ' }}

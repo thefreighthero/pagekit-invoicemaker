@@ -26,7 +26,7 @@ class InvoiceApiController {
         $query = Invoice::query()->select('*, amount - amount_paid AS amount_open');
         $filter = array_merge(array_fill_keys([
             'template', 'invoice_group', 'company_id', 'user_id', 'only', 'status', 'exported',
-            'search', 'ext_key', 'order', 'limit', 'hide_hidden'
+            'search', 'ext_key', 'order', 'limit', 'hide_hidden',
         ], ''), $filter);
 
         extract($filter, EXTR_SKIP);
@@ -86,7 +86,14 @@ class InvoiceApiController {
             });
         }
 
-        if (!preg_match('/^(invoice_number|ext_key|invoice_group|template|amount|amount_open|created)\s(asc|desc)$/i', $order, $order)) {
+        // If it has due_date, remove it from order and make custom filter from json data column
+        if (preg_match('/due_date\s(asc|desc)/i', $order, $matches)) {
+            $dueDateDirection = strtolower($matches[1]);
+
+            $order = [1 => "JSON_UNQUOTE(JSON_EXTRACT(data, '$.due_date'))", 2 => $dueDateDirection];
+        }
+
+        if (!is_array($order) && !preg_match('/^(invoice_number|ext_key|invoice_group|template|amount|amount_open|due_date)\s(asc|desc)$/i', $order, $order)) {
             $order = [1 => 'invoice_number', 2 => 'desc'];
         }
 
