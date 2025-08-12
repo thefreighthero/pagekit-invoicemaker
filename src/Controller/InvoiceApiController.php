@@ -26,7 +26,7 @@ class InvoiceApiController {
         $query = Invoice::query()->select('*, amount - amount_paid AS amount_open');
         $filter = array_merge(array_fill_keys([
             'template', 'invoice_group', 'company_id', 'user_id', 'only', 'status', 'exported',
-            'search', 'ext_key', 'order', 'limit', 'hide_hidden',
+            'search', 'ext_key', 'order', 'limit', 'hide_hidden', 'account_manager_id',
         ], ''), $filter);
 
         extract($filter, EXTR_SKIP);
@@ -123,6 +123,20 @@ class InvoiceApiController {
                 } // else this is cm.company, and if invoice had no account_manager_id, we can't find it for any other way
             }
             $invoice->account_manager_id = $accountManagerId ?? null;
+        }
+        if (!empty($account_manager_id)) {
+            usort($invoices, function ($a, $b) use ($account_manager_id) {
+                // If $a matches and $b doesn't, $a should come first => return -1
+                if ($a->account_manager_id == $account_manager_id && $b->account_manager_id != $account_manager_id) {
+                    return -1;
+                }
+                // If $b matches and $a doesn't, $b should come first => return 1
+                if ($b->account_manager_id == $account_manager_id && $a->account_manager_id != $account_manager_id) {
+                    return 1;
+                }
+                // Otherwise, keep original order
+                return 0;
+            });
         }
 
         return compact('invoices', 'pages', 'count');
@@ -229,69 +243,6 @@ class InvoiceApiController {
         }
 
     }
-
-//    /**
-//     * @Route("/invoice/{id}/account", methods="POST")
-//     * @Request({"id": "integer"})
-//     * @param integer $id Invoice number (id)
-//     * @return array ['message' => string, 'id' => integer|null, 'error' => bool]
-//     * @Access("invoicemaker: manage invoices")
-//     */
-//    public function accountAction($id) {
-//        $response = [
-//            'message' => '',
-//            'id' => null,
-//            'error' => false,
-//        ];
-//
-//        // Find invoice by id
-//        $invoice = Invoice::find($id);
-//
-//        if (!$invoice) {
-//            return [
-//                'message' => __('Invoice not found'),
-//                'id' => null,
-//                'error' => true,
-//            ];
-//        }
-//
-//        // Try to get account manager id from invoice
-//        $accountManagerId = $invoice->account_manager_id ?? null;
-//
-//        if (!$accountManagerId) {
-//            $ext_key = $invoice->ext_key ?? null;
-//
-//            if ($ext_key && strpos($ext_key, 'tfh.shipment') === 0) {
-//                $shipmentId = substr($ext_key, 13);
-//
-//                $shipment = Shipment::find($shipmentId);
-//
-//                if ($shipment && $shipment->account_manager_id) {
-//                    $accountManagerId = $shipment->account_manager_id;
-//                } else {
-//                    return [
-//                        'message' => __('Account manager ID not found via shipment.'),
-//                        'id' => null,
-//                        'error' => true,
-//                    ];
-//                }
-//            } // else this is cm.company, and if invoice had no account_manager_id, we can't find it for any other way
-//        }
-//
-//        if (!$accountManagerId) {
-//            return [
-//                'message' => __('Account manager ID not found.'),
-//                'id' => null,
-//                'error' => true,
-//            ];
-//        }
-//
-//        return [
-//            'message' => __('Account manager ID found.'),
-//            'id' => $accountManagerId,
-//            'error' => false,
-//        ];
-//    }
 
     /**
      * @Route("/rerender/{id}", name="rerender")

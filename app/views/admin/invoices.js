@@ -83,10 +83,10 @@ const vm = {
 
         accountManagersOptions() {
             const options = [];
-            _.forEach(this.moderators, (moderator, key) => {
-                options.push({value: key, text: moderator.name,});
+            _.forEach(this.moderators, (moderator) => {
+                options.push({ value: moderator.id, text: moderator.name });
             });
-            return [{label: this.$trans('Filter by'), options,},];
+            return [{ label: this.$trans('Filter by'), options }];
         },
 
         total_amount() {
@@ -122,7 +122,6 @@ const vm = {
     created() {
         this.Invoices = this.$resource('api/invoicemaker/invoice{/id}');
         this.$watch('config.page', this.load, {immediate: true,});
-        console.log(this.moderators);
     },
 
     methods: {

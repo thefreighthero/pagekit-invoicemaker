@@ -172,9 +172,19 @@
                     {{ getStatusText(invoice.status) }}
                 </td>
                 <td>
-                    Gemaakt: <strong>{{ invoice.created | date 'shortDate' }}</strong>
-                    Vervaldatum: <strong>{{ invoice.data.due_date | date 'shortDate' }}</strong>
+                    Vervaldatum:
+                    <strong v-if="invoice.data.due_date">
+                        {{ invoice.data.due_date | date 'shortDate' }}
+                    </strong>
+                    <strong v-else>n.v.t</strong>
+
+                    Gemaakt:
+                    <strong v-if="invoice.created">
+                        {{ invoice.created | date 'shortDate' }}
+                    </strong>
+                    <strong v-else>n.v.t</strong>
                 </td>
+
                 <td class="uk-text-nowrap uk-text-right">
                     {{ invoice.amount | currency '€ ' }}
                 </td>
