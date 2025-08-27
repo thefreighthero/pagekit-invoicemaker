@@ -54,10 +54,10 @@
                 <th>
                     <input-filter :title="$trans('External key')" :value.sync="config.filter.ext_key"
                                   :options="externalKeysOptions"></input-filter>
-                <th class="pk-table-min-width-100">
-                    <input-filter :title="$trans('Status')" :value.sync="config.filter.status"
-                                  :options="statusOptions"></input-filter>
-                </th>
+<!--                <th class="pk-table-min-width-100">-->
+<!--                    <input-filter :title="$trans('Status')" :value.sync="config.filter.status"-->
+<!--                                  :options="statusOptions"></input-filter>-->
+<!--                </th>-->
                 <th v-order:due_date="config.filter.order">{{ 'Dates' | trans }}</th>
                 <th class="pk-table-min-width-100" v-order:amount="config.filter.order">{{ 'Amount' | trans }}</th>
                 <th class="pk-table-width-minimum"><i class="uk-icon-money" :title="$trans('Payments')"
@@ -168,9 +168,9 @@
                         {{ invoice.ext_key }}
                     </a>
                 </td>
-                <td>
-                    {{ getStatusText(invoice.status) }}
-                </td>
+<!--                <td>-->
+<!--                    {{ getStatusText(invoice.status) }}-->
+<!--                </td>-->
                 <td>
                     Vervaldatum:
                     <strong v-if="invoice.data.due_date">
