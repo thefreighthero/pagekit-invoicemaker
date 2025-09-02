@@ -97,7 +97,25 @@ const vm = {
             return this.invoices ? this.invoices.reduce((sum, invoice) => sum + Number(invoice.amount_open), 0) : 0;
         },
 
+        total_open_selected() {
+            if (!this.selected.length) {
+                return this.total_open; // fallback: show total of all invoices
+            }
 
+            return this.invoices
+                .filter(inv => this.selected.includes(inv.id))
+                .reduce((sum, invoice) => sum + Number(invoice.amount_open), 0);
+        },
+
+        total_amount_selected() {
+            if (!this.selected.length) {
+                return this.total_amount;
+            }
+
+            return this.invoices
+                .filter(inv => this.selected.includes(inv.id))
+                .reduce((sum, invoice) => sum + Number(invoice.amount), 0);
+        },
     },
 
     watch: {

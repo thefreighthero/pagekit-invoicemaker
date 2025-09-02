@@ -220,10 +220,10 @@
             <tfoot>
             <tr>
                 <td colspan="6"></td>
-                <td class="uk-text-right"><strong>{{ total_amount | currency '€ ' }}</strong></td>
+                <td class="uk-text-right"><strong>{{ total_amount_selected | currency '€ ' }}</strong></td>
                 <td></td>
                 <td></td>
-                <td class="uk-text-right"><strong>{{ total_open | currency '€ ' }}</strong></td>
+                <td class="uk-text-right"><strong>{{ total_open_selected | currency '€ ' }}</strong></td>
             </tr>
             </tfoot>
         </table>
