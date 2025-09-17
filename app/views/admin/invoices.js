@@ -83,10 +83,10 @@ const vm = {
 
         accountManagersOptions() {
             const options = [];
-            _.forEach(this.moderators, (moderator, key) => {
-                options.push({value: key, text: moderator.name,});
+            _.forEach(this.moderators, (moderator) => {
+                options.push({ value: moderator.id, text: moderator.name });
             });
-            return [{label: this.$trans('Filter by'), options,},];
+            return [{ label: this.$trans('Filter by'), options }];
         },
 
         total_amount() {
@@ -97,7 +97,25 @@ const vm = {
             return this.invoices ? this.invoices.reduce((sum, invoice) => sum + Number(invoice.amount_open), 0) : 0;
         },
 
+        total_open_selected() {
+            if (!this.selected.length) {
+                return this.total_open; // fallback: show total of all invoices
+            }
 
+            return this.invoices
+                .filter(inv => this.selected.includes(inv.id))
+                .reduce((sum, invoice) => sum + Number(invoice.amount_open), 0);
+        },
+
+        total_amount_selected() {
+            if (!this.selected.length) {
+                return this.total_amount;
+            }
+
+            return this.invoices
+                .filter(inv => this.selected.includes(inv.id))
+                .reduce((sum, invoice) => sum + Number(invoice.amount), 0);
+        },
     },
 
     watch: {
@@ -122,7 +140,6 @@ const vm = {
     created() {
         this.Invoices = this.$resource('api/invoicemaker/invoice{/id}');
         this.$watch('config.page', this.load, {immediate: true,});
-        console.log(this.moderators);
     },
 
     methods: {

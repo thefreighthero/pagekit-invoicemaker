@@ -57,7 +57,12 @@ return [
 				'subline' => '',
 				'params' => ['pdf_background' => '']
 			]
-		]
+		],
+        'quote_fields' => [
+            'en' => 'Text in English',
+            'nl' => 'Tekst in het Nederlands',
+            'de' => 'Text in Deutsch',
+        ]
 	],
 
 	'menu' => [

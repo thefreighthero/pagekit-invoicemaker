@@ -54,11 +54,11 @@
                 <th>
                     <input-filter :title="$trans('External key')" :value.sync="config.filter.ext_key"
                                   :options="externalKeysOptions"></input-filter>
-                <th class="pk-table-min-width-100">
-                    <input-filter :title="$trans('Status')" :value.sync="config.filter.status"
-                                  :options="statusOptions"></input-filter>
-                </th>
-                <th v-order:created="config.filter.order">{{ 'Date' | trans }}</th>
+<!--                <th class="pk-table-min-width-100">-->
+<!--                    <input-filter :title="$trans('Status')" :value.sync="config.filter.status"-->
+<!--                                  :options="statusOptions"></input-filter>-->
+<!--                </th>-->
+                <th v-order:due_date="config.filter.order">{{ 'Dates' | trans }}</th>
                 <th class="pk-table-min-width-100" v-order:amount="config.filter.order">{{ 'Amount' | trans }}</th>
                 <th class="pk-table-width-minimum"><i class="uk-icon-money" :title="$trans('Payments')"
                                                       data-uk-tooltip></i></th>
@@ -168,12 +168,23 @@
                         {{ invoice.ext_key }}
                     </a>
                 </td>
+<!--                <td>-->
+<!--                    {{ getStatusText(invoice.status) }}-->
+<!--                </td>-->
                 <td>
-                    {{ getStatusText(invoice.status) }}
+                    Vervaldatum:
+                    <strong v-if="invoice.data.due_date">
+                        {{ invoice.data.due_date | date 'shortDate' }}
+                    </strong>
+                    <strong v-else>n.v.t</strong>
+
+                    Gemaakt:
+                    <strong v-if="invoice.created">
+                        {{ invoice.created | date 'shortDate' }}
+                    </strong>
+                    <strong v-else>n.v.t</strong>
                 </td>
-                <td>
-                    {{ invoice.created | date 'shortDate' }}
-                </td>
+
                 <td class="uk-text-nowrap uk-text-right">
                     {{ invoice.amount | currency '€ ' }}
                 </td>
@@ -209,10 +220,10 @@
             <tfoot>
             <tr>
                 <td colspan="6"></td>
-                <td class="uk-text-right"><strong>{{ total_amount | currency '€ ' }}</strong></td>
+                <td class="uk-text-right"><strong>{{ total_amount_selected | currency '€ ' }}</strong></td>
                 <td></td>
                 <td></td>
-                <td class="uk-text-right"><strong>{{ total_open | currency '€ ' }}</strong></td>
+                <td class="uk-text-right"><strong>{{ total_open_selected | currency '€ ' }}</strong></td>
             </tr>
             </tfoot>
         </table>

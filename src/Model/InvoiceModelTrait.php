@@ -3,9 +3,6 @@
 namespace Bixie\Invoicemaker\Model;
 
 use Bixie\Contactmanager\Model\Company;
-use Bixie\Freighthero\Helpers\ShipmentHelper;
-use Bixie\Freighthero\Model\Shipment;
-use Bixie\Taskmanager\Model\Task;
 use Pagekit\Application as App;
 use Pagekit\Database\ORM\ModelTrait;
 
@@ -56,6 +53,9 @@ trait InvoiceModelTrait {
 
         /** @var Invoice $invoice */
         $invoice = self::modelCreate($data);
+
+        // Clear language to reset it back to default language
+        App::session()->remove('_locale');
 
         return $invoice;
     }
