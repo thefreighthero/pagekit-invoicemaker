@@ -285,6 +285,9 @@ $iframe_src = $app->url('@invoicemaker/api/invoice/html', [
 
                     <h3>{{ 'Ledger data' | trans }}</h3>
 
+                    <div class="uk-alert uk-alert-info" v-if="!invoice.exported">
+                        {{ 'Bedragen moeten altijd positief zijn.' | trans }}
+                    </div>
                     <div class="uk-alert uk-alert-danger" v-if="invoice.exported">
                         {{ 'Factuur is reeds geexporteerd. Je mag geen bedragen meer aanpassen.' | trans }}
                     </div>
