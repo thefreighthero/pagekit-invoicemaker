@@ -5,6 +5,7 @@ namespace Bixie\Invoicemaker\Controller;
 use Bixie\Freighthero\Model\Shipment;
 use Bixie\Invoicemaker\InvoicemakerModule;
 use Bixie\Invoicemaker\Model\Invoice;
+use DateTime;
 use Pagekit\Application as App;
 use Pagekit\Application\Exception;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -15,18 +16,20 @@ use Symfony\Component\Routing\Generator\UrlGenerator;
 /**
  * @Route("invoice", name="invoice")
  */
-class InvoiceApiController {
+class InvoiceApiController
+{
 
     /**
      * @Route("/", methods="GET")
      * @Request({"filter": "array", "page":"int"})
      * @Access("invoicemaker: view own invoices")
      */
-    public function indexAction ($filter = [], $page = 0) {
+    public function indexAction($filter = [], $page = 0)
+    {
         $query = Invoice::query()->select('*, amount - amount_paid AS amount_open');
         $filter = array_merge(array_fill_keys([
             'template', 'invoice_group', 'company_id', 'user_id', 'only', 'status', 'exported',
-            'search', 'ext_key', 'order', 'limit', 'hide_hidden', 'account_manager_id',
+            'search', 'ext_key', 'order', 'limit', 'hide_hidden', 'account_manager_id', 'currentWeek',
         ], ''), $filter);
 
         extract($filter, EXTR_SKIP);
@@ -34,6 +37,16 @@ class InvoiceApiController {
         $user = App::user();
         if (!$user->hasAccess('invoicemaker: view invoices || invoicemaker: manage invoices')) {
             $user_id = $user->id;
+        }
+
+        // Get only templates what are ending in this week
+        if ($currentWeek && $currentWeek == 'true') {
+            $mondayStart = (new DateTime())->modify('monday this week')->setTime(0, 0, 0); // Monday 00:00:00
+            $sundayEnd = (new DateTime())->modify('sunday this week')->setTime(23, 59, 59); // Sunday 23:59:59
+
+            // Filter templates with due_date between Monday and Sunday of current week
+            $query->where("JSON_EXTRACT(data, '$.due_date') >= :week_start", ['week_start' => $mondayStart->format('Y-m-d H:i:s')])
+                ->where("JSON_EXTRACT(data, '$.due_date') <= :week_end", ['week_end' => $sundayEnd->format('Y-m-d H:i:s')]);
         }
 
         if (!empty($template)) {
@@ -75,7 +88,6 @@ class InvoiceApiController {
                     ->orWhere("JSON_EXTRACT(data, '$.hidden') IS NULL");
             });
         }
-
 
 
         $query->where('deleted_at IS NULL');
@@ -149,7 +161,8 @@ class InvoiceApiController {
      * @Request({"invoice": "array", "id": "int"}, csrf=true)
      * @Access("invoicemaker: manage invoices")
      */
-    public function saveAction ($data, $id = 0) {
+    public function saveAction($data, $id = 0)
+    {
 
         if (!$invoice = Invoice::find($id)) {
             $invoice = Invoice::create();
@@ -160,14 +173,14 @@ class InvoiceApiController {
             // Check if owning shipment has changed.
             $invoiceOwnerChanged = false;
 
-            if(isset($data['shipment_id']) && strlen($data['shipment_id']) > 0) {
+            if (isset($data['shipment_id']) && strlen($data['shipment_id']) > 0) {
 
                 $shipment_id = $data['shipment_id'];
                 unset($data['shipment_id']);
 
                 $shipment = Shipment::find($shipment_id);
 
-                if(!empty($shipment) && strpos($data['ext_key'], 'tfh.shipment.') === false) {
+                if (!empty($shipment) && strpos($data['ext_key'], 'tfh.shipment.') === false) {
                     $data['ext_key'] = 'tfh.shipment.' . $shipment_id;
                     $invoiceOwnerChanged = true;
                 }
@@ -188,10 +201,11 @@ class InvoiceApiController {
      * @Request({"id": "int"}, csrf=true)
      * @Access("invoicemaker: manage invoices")
      */
-    public function deleteAction ($id) {
+    public function deleteAction($id)
+    {
         if ($invoice = Invoice::find($id)) {
 
-            if($invoice->exported === true) {
+            if ($invoice->exported === true) {
                 return ['message' => 'error'];
             }
             $invoice->delete();
@@ -206,10 +220,11 @@ class InvoiceApiController {
      * @Request({"ids": "array"}, csrf=true)
      * @Access("invoicemaker: manage invoices")
      */
-    public function bulkDeleteAction ($ids = []) {
+    public function bulkDeleteAction($ids = [])
+    {
         foreach (array_filter($ids) as $id) {
             $result = $this->deleteAction($id);
-            if($result['message'] == 'error') return $result;
+            if ($result['message'] == 'error') return $result;
         }
 
         return ['message' => 'success'];
@@ -220,7 +235,8 @@ class InvoiceApiController {
      * @Request({"id": "integer"}, csrf=true)
      * @Access("invoicemaker: manage invoices")
      */
-    public function creditAction($id) {
+    public function creditAction($id)
+    {
         /** @var InvoicemakerModule $invoicemaker */
         $invoicemaker = App::module('bixie/invoicemaker');
 
@@ -249,7 +265,8 @@ class InvoiceApiController {
      * @Request({"id": "integer"})
      * @Access("invoicemaker: manage invoices")
      */
-    public function reRenderPdfAction($id) {
+    public function reRenderPdfAction($id)
+    {
         /** @var InvoicemakerModule $invoicemaker */
         $invoicemaker = App::module('bixie/invoicemaker');
 
@@ -279,11 +296,12 @@ class InvoiceApiController {
      * @Request({"invoice_number": "string", "key": "string", "inline": "bool"})
      * @Access("invoicemaker: view own invoices")
      * @param integer $invoice_number Invoice bumber
-     * @param string  $key            session key
-     * @param bool    $inline
+     * @param string $key session key
+     * @param bool $inline
      * @return StreamedResponse|BinaryFileResponse
      */
-    public function pdfAction($invoice_number, $key, $inline = false) {
+    public function pdfAction($invoice_number, $key, $inline = false)
+    {
         /** @var InvoicemakerModule $invoicemaker */
         $invoicemaker = App::module('bixie/invoicemaker');
 
@@ -312,7 +330,7 @@ class InvoiceApiController {
         }
 
         $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
-            ($inline ? ResponseHeaderBag::DISPOSITION_INLINE: ResponseHeaderBag::DISPOSITION_ATTACHMENT),
+            ($inline ? ResponseHeaderBag::DISPOSITION_INLINE : ResponseHeaderBag::DISPOSITION_ATTACHMENT),
             $filename,
             mb_convert_encoding($filename, 'ASCII')
         ));
@@ -325,10 +343,11 @@ class InvoiceApiController {
      * @Route("/html/{invoice_number}", name="html")
      * @Request({"invoice_number": "string", "key": "string"})
      * @param integer $invoice_number Invoice bumber
-     * @param string  $key            session key
+     * @param string $key session key
      * @return StreamedResponse
      */
-    public function htmlAction($invoice_number, $key) {
+    public function htmlAction($invoice_number, $key)
+    {
         /** @var InvoicemakerModule $invoicemaker */
         $invoicemaker = App::module('bixie/invoicemaker');
 

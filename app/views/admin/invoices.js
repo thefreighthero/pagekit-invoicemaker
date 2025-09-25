@@ -28,6 +28,7 @@ const vm = {
                     exported: '',
                     invoice_group: '',
                     limit: 20,
+                    currentWeek: false,
                 }),
             },
             pages: 0,
