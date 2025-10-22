@@ -29,6 +29,7 @@ const vm = {
                     invoice_group: '',
                     limit: 20,
                     currentWeek: false,
+                    expiredOnly: false,
                 }),
             },
             pages: 0,
