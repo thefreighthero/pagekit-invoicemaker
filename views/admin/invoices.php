@@ -35,14 +35,22 @@
         </div>
         <invoices-download></invoices-download>
     </div>
-    <div class="uk-form uk-flex-row uk-flex-gap">
-        <label for="currentWeekInvoices" class="uk-margin-small-right">{{ 'Show all invoices for this week' | trans }}</label>
-        <input id="currentWeekInvoices" type="checkbox" v-model="config.filter.currentWeek">
-    </div>
+    <div class="uk-margin uk-flex uk-flex-middle" style="gap: 20px;">
+        <div class="uk-flex uk-flex-middle" style="gap: 8px;">
+            <span class="uk-text-muted">{{ 'Deze week' | trans }}</span>
+            <label class="uk-switch">
+                <input id="currentWeekInvoices" type="checkbox" v-model="config.filter.currentWeek">
+                <span class="uk-switch-slider uk-border-rounded"></span>
+            </label>
+        </div>
 
-    <div class="uk-form uk-flex-row uk-flex-gap">
-        <label for="expiredInvoices" class="uk-margin-small-right">{{ 'Expired invoices only' | trans }}</label>
-        <input id="expiredInvoices" type="checkbox" v-model="config.filter.expiredOnly">
+        <div class="uk-flex uk-flex-middle" style="gap: 8px;">
+            <span class="uk-text-muted">{{ 'Alleen verlopen' | trans }}</span>
+            <label class="uk-switch">
+                <input id="expiredInvoices" type="checkbox" v-model="config.filter.expiredOnly">
+                <span class="uk-switch-slider uk-border-rounded"></span>
+            </label>
+        </div>
     </div>
     <div class="uk-overflow-container uk-form">
         <table class="uk-table uk-table-hover uk-table-middle">
@@ -255,3 +263,63 @@
     </div>
 
 </div>
+
+<style>
+    .uk-switch {
+        position: relative;
+        display: inline-block;
+        width: 40px;
+        height: 22px;
+        flex-shrink: 0;
+    }
+
+    .uk-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .uk-switch-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #d3d3d3;
+        transition: .3s ease;
+        border-radius: 22px;
+        border: 2px solid #e0e0e0;
+    }
+
+    .uk-switch-slider:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 2px;
+        bottom: 2px;
+        background-color: white;
+        transition: .3s ease;
+        border-radius: 50%;
+        box-shadow: 0 1px 3px rgba(0,0,0,.15);
+    }
+
+    .uk-switch input:checked + .uk-switch-slider {
+        background-color: #4CAF50;
+        border-color: #4CAF50;
+    }
+
+    .uk-switch input:checked + .uk-switch-slider:before {
+        transform: translateX(18px);
+    }
+
+    .uk-switch:hover .uk-switch-slider {
+        border-color: #c0c0c0;
+    }
+
+    .uk-switch input:checked:hover + .uk-switch-slider {
+        background-color: #45a049;
+        border-color: #45a049;
+    }
+</style>
