@@ -39,6 +39,11 @@
         <label for="currentWeekInvoices" class="uk-margin-small-right">{{ 'Show all invoices for this week' | trans }}</label>
         <input id="currentWeekInvoices" type="checkbox" v-model="config.filter.currentWeek">
     </div>
+
+    <div class="uk-form uk-flex-row uk-flex-gap">
+        <label for="expiredInvoices" class="uk-margin-small-right">{{ 'Expired invoices only' | trans }}</label>
+        <input id="expiredInvoices" type="checkbox" v-model="config.filter.expiredOnly">
+    </div>
     <div class="uk-overflow-container uk-form">
         <table class="uk-table uk-table-hover uk-table-middle">
             <thead>

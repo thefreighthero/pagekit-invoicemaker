@@ -30,6 +30,7 @@ class InvoiceApiController
         $filter = array_merge(array_fill_keys([
             'template', 'invoice_group', 'company_id', 'user_id', 'only', 'status', 'exported',
             'search', 'ext_key', 'order', 'limit', 'hide_hidden', 'account_manager_id', 'currentWeek',
+            'expiredOnly'
         ], ''), $filter);
 
         extract($filter, EXTR_SKIP);
@@ -40,13 +41,20 @@ class InvoiceApiController
         }
 
         // Get only templates what are ending in this week
-        if ($currentWeek && $currentWeek == 'true') {
+        if (filter_var($currentWeek, FILTER_VALIDATE_BOOLEAN)) {
             $mondayStart = (new DateTime())->modify('monday this week')->setTime(0, 0, 0); // Monday 00:00:00
             $sundayEnd = (new DateTime())->modify('sunday this week')->setTime(23, 59, 59); // Sunday 23:59:59
 
             // Filter templates with due_date between Monday and Sunday of current week
             $query->where("JSON_EXTRACT(data, '$.due_date') >= :week_start", ['week_start' => $mondayStart->format('Y-m-d H:i:s')])
                 ->where("JSON_EXTRACT(data, '$.due_date') <= :week_end", ['week_end' => $sundayEnd->format('Y-m-d H:i:s')]);
+        }
+
+        // Get only expired invoices from today
+        if (filter_var($expiredOnly, FILTER_VALIDATE_BOOLEAN))
+        {
+            $today = (new DateTime())->format('Y-m-d H:i:s');
+            $query->where('JSON_EXTRACT(data, "$.due_date") < :expired', ['expired' => $today]);
         }
 
         if (!empty($template)) {
